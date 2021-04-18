@@ -101,6 +101,10 @@ composer install
 
 4. Run project
 
+Run backend-forum-example.bat file
+
+or
+
 ```sh
 php artisan serve
 ```
