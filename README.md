@@ -93,7 +93,7 @@ git clone https://github.com/de4th-zone/backend-forum-example.git
 cd backend-forum-example-master
 ```
 
-4. Install NPM packages
+4. Install packages
 
 ```sh
 composer install
