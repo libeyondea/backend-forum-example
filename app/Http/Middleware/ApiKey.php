@@ -16,6 +16,7 @@ class ApiKey
      */
     public function handle(Request $request, Closure $next)
     {
+        $response = $next($request);
         if ($request->header('X-Api-Key') != env('APP_KEY')) {
             return response()->json([
                 'success'=> false,
@@ -24,6 +25,8 @@ class ApiKey
                 ]
             ], 400);
         }
-        return $next($request);
+        $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Content-Range, Content-Disposition, Content-Description, X-Auth-Token');
+        $response->header('Access-Control-Allow-Origin', '*');
+        return $response;
     }
 }
