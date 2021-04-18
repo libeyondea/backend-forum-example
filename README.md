@@ -7,6 +7,12 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
+<style>
+    img {
+        border-radius: 50%;
+    }
+</style>
+
 [![GitHub contributors](https://img.shields.io/github/contributors/Naereen/StrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example/graphs/contributors/)
 [![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example/issues/)
 [![GitHub version](https://badge.fury.io/gh/Naereen%2FStrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example)
@@ -16,9 +22,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/de4th-zone/backend-forum-example">
-    <div tyle="border-radius: 50%;">
-        <img src="https://i.imgur.com/6jxXR32.jpg" alt="De4thZone" width="166" height="166">
-    </div>
+    <img style="border-radius: 50%;" src="https://i.imgur.com/6jxXR32.jpg" alt="De4thZone" width="166" height="166">
   </a>
   <h3 align="center">Forum Examples</h3>
   <p align="center">
