@@ -26,8 +26,8 @@ class CommentController extends Controller
         $comment = $this->comment->whereHas('post', function($q) use ($post_slug) {
             $q->where('slug', $post_slug);
         });
-        $listComment = fractal($comment->skip($offset)->take($limit)->get(), $this->commentTransformers);
         $commentsCount = $comment->get()->count();
+        $listComment = fractal($comment->skip($offset)->take($limit)->get(), $this->commentTransformers);
         return response()->json([
             'success' => true,
             'data' => $listComment,

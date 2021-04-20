@@ -20,6 +20,7 @@ class PostTransformers extends TransformerAbstract
             'slug' => $post->slug,
             'excerpt' => $post->excerpt,
             'image' => $post->image,
+            'content' => $post->content,
             'published' => $post->published,
             'published_at' => $post->published_at,
             'created_at' => $post->created_at,

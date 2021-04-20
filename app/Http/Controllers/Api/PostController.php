@@ -28,24 +28,24 @@ class PostController extends Controller
             $post = $this->post->whereHas('tag', function($q) use ($request) {
                 $q->where('slug', $request->tag);
             });
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
             $postsCount = $post->get()->count();
+            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else if ($request->user) {
             $post = $this->post->whereHas('user', function($q) use ($request) {
                 $q->where('user_name', $request->user);
             });
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
             $postsCount = $post->get()->count();
+            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else if ($request->favorited) {
             $post = $this->post->whereHas('userfavorite', function($q) use ($request) {
                 $q->where('user_name', $request->favorited);
             });
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
             $postsCount = $post->get()->count();
+            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else {
             $post = $this->post;
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
             $postsCount = $post->get()->count();
+            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         }
         return response()->json([
             'success' => true,

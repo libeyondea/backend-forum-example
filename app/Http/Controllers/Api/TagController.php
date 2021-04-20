@@ -24,13 +24,13 @@ class TagController extends Controller
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
         $tag = $this->tag;
-        $listTag = fractal($tag->skip($offset)->take($limit)->get(), $this->tagTransformers);
         $tagsCount = $tag->get()->count();
+        $listTag = fractal($tag->skip($offset)->take($limit)->get(), $this->tagTransformers);
         return response()->json([
             'success' => true,
             'data' => $listTag,
             'meta' => [
-                'posts_count' => $tagsCount
+                'tags_count' => $tagsCount
             ]
         ], 200);
     }

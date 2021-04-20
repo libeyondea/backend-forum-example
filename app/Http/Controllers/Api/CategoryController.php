@@ -24,8 +24,8 @@ class CategoryController extends Controller
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
         $category = $this->category;
-        $listCategory = fractal($category->skip($offset)->take($limit)->get(), $this->categoryTransformers);
         $categoriesCount = $category->get()->count();
+        $listCategory = fractal($category->skip($offset)->take($limit)->get(), $this->categoryTransformers);
         return response()->json([
             'success' => true,
             'data' => $listCategory,

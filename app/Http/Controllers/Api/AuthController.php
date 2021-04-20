@@ -72,18 +72,20 @@ class AuthController extends Controller
                     "user" => "User name or password does not exists"
                 ]
             ], 200);
-        $user = $request->user();
         $tokenResult = auth()->user()->createToken('Personal Access Token');
         return response()->json([
             'success' => true,
             'data' => [
+                'id' => auth()->user()->id,
+                'user_name' =>auth()->user()->user_name,
+                'avatar' => auth()->user()->avatar,
                 'access_token' => $tokenResult->accessToken,
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse(
                     $tokenResult->token->expires_at
                 )->toDateTimeString()
             ]
-        ]);
+        ], 200);
     }
 
     public function logout(Request $request)
@@ -108,8 +110,8 @@ class AuthController extends Controller
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
         $user = $this->user;
-        $listUser = fractal($user->skip($offset)->take($limit)->get(), $this->userTransformers);
         $usersCount = $user->get()->count();
+        $listUser = fractal($user->skip($offset)->take($limit)->get(), $this->userTransformers);
         return response()->json([
             'success' => true,
             'data' => $listUser,
