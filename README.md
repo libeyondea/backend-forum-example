@@ -18,11 +18,11 @@
   <a href="https://github.com/de4th-zone/backend-forum-example">
     <img style="border-radius: 50%;" src="https://i.imgur.com/6jxXR32.jpg" alt="De4thZone" width="166" height="166">
   </a>
-  <h3 align="center">Forum Examples</h3>
+  <h3 align="center">Backend Forum Examples</h3>
   <p align="center">
     <a href="https://github.com/de4th-zone/backend-forum-example"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="https://de4thzone.com" target="_blank" rel="noopener noreferrer">View Demo</a>
+    <a href="https://backend-forum-example.herokuapp.com" target="_blank" rel="noopener noreferrer">View Demo</a>
     ·
     <a href="https://github.com/de4th-zone/backend-forum-example/issues">Report Bug</a>
     ·
