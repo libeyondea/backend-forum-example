@@ -17,23 +17,26 @@ use App\Http\Controllers\Api\CommentController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('users/login', [AuthController::class, 'login']);
-Route::post('users/register', [AuthController::class, 'register']);
-Route::get('users', [AuthController::class, 'listUser']);
-Route::get('users/{user_name}', [AuthController::class, 'singleUser']);
-//
-Route::get('posts', [PostController::class, 'listPost']);
-Route::get('posts/{slug}', [PostController::class, 'singlePost']);
-//
-Route::get('tags', [TagController::class, 'listTag']);
-Route::get('tags/{slug}', [TagController::class, 'singleTag']);
-//
-Route::get('categories', [CategoryController::class, 'listCategory']);
-Route::get('categories/{slug}', [CategoryController::class, 'singleCategory']);
-//
-Route::get('comments/{post_slug}', [CommentController::class, 'listComment']);
 
-Route::group(['middleware' => 'auth:api'], function(){
+Route::group(['middleware' => 'cors'], function(){
+    Route::post('users/login', [AuthController::class, 'login']);
+    Route::post('users/register', [AuthController::class, 'register']);
+    Route::get('users', [AuthController::class, 'listUser']);
+    Route::get('users/{user_name}', [AuthController::class, 'singleUser']);
+    //
+    Route::get('posts', [PostController::class, 'listPost']);
+    Route::get('posts/{slug}', [PostController::class, 'singlePost']);
+    //
+    Route::get('tags', [TagController::class, 'listTag']);
+    Route::get('tags/{slug}', [TagController::class, 'singleTag']);
+    //
+    Route::get('categories', [CategoryController::class, 'listCategory']);
+    Route::get('categories/{slug}', [CategoryController::class, 'singleCategory']);
+    //
+    Route::get('comments/{post_slug}', [CommentController::class, 'listComment']);
+});
+
+Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::get('users/logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
 });
