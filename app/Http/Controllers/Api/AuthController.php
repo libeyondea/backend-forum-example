@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Follow;
 use App\Models\Role;
 use App\Models\User;
 use App\Transformers\UserTransformers;
+use GuzzleHttp\Client;
+
 
 class AuthController extends Controller
 {
@@ -19,10 +22,13 @@ class AuthController extends Controller
 
     private $userTransformers;
 
-    public function __construct(User $user, UserTransformers $userTransformers)
+    private $client;
+
+    public function __construct(User $user, UserTransformers $userTransformers, Client $client)
     {
         $this->user = $user;
         $this->userTransformers = $userTransformers;
+        $this->client = $client;
     }
 
     public function register(Request $request)
@@ -64,6 +70,10 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        if ($request->provider == 'facebook') {
+            return $this->checkFacebook($request->access_token);
+        }
+
         $credentials = request(['user_name', 'password']);
         if(!auth()->attempt($credentials))
             return response()->json([
@@ -86,6 +96,56 @@ class AuthController extends Controller
                 )->toDateTimeString()
             ]
         ], 200);
+    }
+
+    public function checkFacebook($access_token)
+    {
+        try {
+            $checkToken = $this->client->get("https://graph.facebook.com/v3.1/me?fields=id,first_name,last_name,email,picture&access_token=$access_token");
+            $responseFacebook = json_decode($checkToken->getBody()->getContents(), true);
+            return $this->checkUserByEmail($responseFacebook);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function checkUserByEmail($profile)
+    {
+        $user = User::where('email', $profile['email'])->first();
+        if (!$user) {
+            $user = User::create([
+                'first_name' => $profile['first_name'],
+                'last_name' => $profile['last_name'],
+                'email' => $profile['email'],
+                'user_name' => 'fb_'.$profile['id'],
+                'password' => bcrypt(Str::random(8)),
+                'avatar' => $profile['picture']['data']['url'],
+                'role_id' => Role::where('slug', 'guest')->first()->id,
+            ]);
+        }
+
+        $user->forceFill([
+            'email' => $user['email'],
+        ])->save();
+
+        $tokenResult = $user->createToken('Personal Access Client');
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $user->id,
+                'user_name' => $user->user_name,
+                'avatar' => $user->avatar,
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse(
+                    $tokenResult->token->expires_at
+                )->toDateTimeString()
+            ]
+        ]);
     }
 
     public function logout(Request $request)
