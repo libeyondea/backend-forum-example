@@ -74,6 +74,10 @@ class AuthController extends Controller
             return $this->checkFacebook($request->access_token);
         }
 
+        if ($request->provider == 'google') {
+            return $this->checkGoogle($request->access_token);
+        }
+
         $credentials = request(['user_name', 'password']);
         if(!auth()->attempt($credentials))
             return response()->json([
@@ -103,7 +107,7 @@ class AuthController extends Controller
         try {
             $checkToken = $this->client->get("https://graph.facebook.com/v3.1/me?fields=id,first_name,last_name,email,picture&access_token=$access_token");
             $responseFacebook = json_decode($checkToken->getBody()->getContents(), true);
-            return $this->checkUserByEmail($responseFacebook);
+            return $this->checkUserFacebook($responseFacebook);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -112,24 +116,72 @@ class AuthController extends Controller
         }
     }
 
-    public function checkUserByEmail($profile)
+    public function checkGoogle($access_token)
     {
-        $user = User::where('email', $profile['email'])->first();
+        try {
+            $checkToken = $this->client->get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$access_token");
+            $responseGoogle = json_decode($checkToken->getBody()->getContents(), true);
+            return $this->checkUserGoogle($responseGoogle);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function checkUserFacebook($profile)
+    {
+        $user = User::where('facebook_id', $profile['id'])->first();
         if (!$user) {
             $user = User::create([
+                'facebook_id' => $profile['id'],
                 'first_name' => $profile['first_name'],
                 'last_name' => $profile['last_name'],
                 'email' => $profile['email'],
                 'user_name' => 'fb_'.$profile['id'],
-                'password' => bcrypt(Str::random(8)),
+                'password' => bcrypt(Str::random(9)),
                 'avatar' => $profile['picture']['data']['url'],
                 'role_id' => Role::where('slug', 'guest')->first()->id,
             ]);
         }
 
-        $user->forceFill([
+        /* $user->forceFill([
             'email' => $user['email'],
-        ])->save();
+        ])->save(); */
+
+        $tokenResult = $user->createToken('Personal Access Client');
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $user->id,
+                'user_name' => $user->user_name,
+                'avatar' => $user->avatar,
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse(
+                    $tokenResult->token->expires_at
+                )->toDateTimeString()
+            ]
+        ]);
+    }
+
+    public function checkUserGoogle($profile)
+    {
+        $user = User::where('google_id', $profile['sub'])->first();
+        if (!$user) {
+            $user = User::create([
+                'google_id' => $profile['sub'],
+                'first_name' => $profile['given_name'],
+                'last_name' => $profile['family_name'],
+                'email' => $profile['email'],
+                'user_name' => 'gg_'.$profile['sub'],
+                'password' => bcrypt(Str::random(9)),
+                'avatar' => $profile['picture'],
+                'role_id' => Role::where('slug', 'guest')->first()->id,
+            ]);
+        }
 
         $tokenResult = $user->createToken('Personal Access Client');
 
