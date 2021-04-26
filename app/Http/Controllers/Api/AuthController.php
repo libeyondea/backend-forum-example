@@ -112,21 +112,21 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $e->getMessage()
-            ]);
+            ], 500);
         }
     }
 
     public function checkGoogle($access_token)
     {
         try {
-            $checkToken = $this->client->get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$access_token");
+            $checkToken = $this->client->get("https://www.googleapis.com/oauth2/v3/userinfo?access_token=$access_token");
             $responseGoogle = json_decode($checkToken->getBody()->getContents(), true);
             return $this->checkUserGoogle($responseGoogle);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'errors' => $e->getMessage()
-            ]);
+            ], 500);
         }
     }
 

@@ -23,21 +23,21 @@ class CategoryController extends Controller
     {
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
-        $category = $this->category;
+        $category = Category::orderBy('id', 'asc');
         $categoriesCount = $category->get()->count();
         $listCategory = fractal($category->skip($offset)->take($limit)->get(), $this->categoryTransformers);
         return response()->json([
             'success' => true,
             'data' => $listCategory,
             'meta' => [
-                'posts_count' => $categoriesCount
+                'categories_count' => $categoriesCount
             ]
         ], 200);
     }
 
     public function singleCategory($slug)
     {
-        $category = $this->category->where('slug', $slug);
+        $category = Category::where('slug', $slug);
         $singleCategory = fractal($category->first(), $this->categoryTransformers);
         return response()->json([
             'success' => true,

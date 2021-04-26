@@ -24,7 +24,8 @@ class UserTransformers extends TransformerAbstract
             'gender' => $user->gender,
             'avatar' => $user->avatar,
             'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at
+            'updated_at' => $user->updated_at,
+            'total_posts' =>$user->post->count(),
         ];
     }
 

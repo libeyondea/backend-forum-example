@@ -25,25 +25,31 @@ class PostController extends Controller
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
         if ($request->tag) {
-            $post = $this->post->whereHas('tag', function($q) use ($request) {
+            $post = Post::whereHas('tag', function($q) use ($request) {
                 $q->where('slug', $request->tag);
-            });
+            })->orderBy('id', 'asc');
+            $postsCount = $post->get()->count();
+            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
+        } else if ($request->category) {
+            $post = Post::whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            })->orderBy('id', 'asc');
             $postsCount = $post->get()->count();
             $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else if ($request->user) {
-            $post = $this->post->whereHas('user', function($q) use ($request) {
+            $post = Post::whereHas('user', function($q) use ($request) {
                 $q->where('user_name', $request->user);
-            });
+            })->orderBy('id', 'asc');
             $postsCount = $post->get()->count();
             $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else if ($request->favorited) {
-            $post = $this->post->whereHas('userfavorite', function($q) use ($request) {
+            $post = Post::whereHas('userfavorite', function($q) use ($request) {
                 $q->where('user_name', $request->favorited);
-            });
+            })->orderBy('id', 'asc');
             $postsCount = $post->get()->count();
             $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         } else {
-            $post = $this->post;
+            $post = Post::orderBy('id', 'asc');
             $postsCount = $post->get()->count();
             $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
         }
@@ -58,7 +64,7 @@ class PostController extends Controller
 
     public function singlePost($slug)
     {
-        $post = $this->post->where('slug', $slug);
+        $post = Post::where('slug', $slug);
         $singlePost = fractal($post->first(), $this->postTransformers);
         return response()->json([
             'success' => true,
