@@ -42,4 +42,5 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::post('users/update', [AuthController::class, 'updateUser']);
     //
     Route::post('comments', [CommentController::class, 'createComment']);
+    Route::delete('comments/{post_slug}', [CommentController::class, 'deleteComment']);
 });

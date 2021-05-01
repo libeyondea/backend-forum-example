@@ -67,4 +67,17 @@ class CommentController extends Controller
             'data' => $comment,
         ], 200);
     }
+
+    public function deleteComment(Request $request, $post_slug)
+    {
+        $comment = Comment::where('post_id', Post::where('slug', $post_slug)->first()->id)
+                            ->where('user_id', auth()->user()->id)
+                            ->where('id', $request->id)->first();
+        $comment->delete();
+        //$comment = fractal($comment, $this->commentTransformers);
+        return response()->json([
+            'success' => true,
+            'data' => $comment,
+        ], 200);
+    }
 }
