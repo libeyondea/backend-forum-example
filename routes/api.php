@@ -39,4 +39,7 @@ Route::group(['middleware' => 'cors'], function(){
 Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::get('users/logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
+    Route::post('users/update', [AuthController::class, 'updateUser']);
+    //
+    Route::post('comments', [CommentController::class, 'createComment']);
 });

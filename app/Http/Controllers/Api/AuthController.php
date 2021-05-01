@@ -146,10 +146,6 @@ class AuthController extends Controller
             ]);
         }
 
-        /* $user->forceFill([
-            'email' => $user['email'],
-        ])->save(); */
-
         $tokenResult = $user->createToken('Personal Access Client');
 
         return response()->json([
@@ -217,11 +213,60 @@ class AuthController extends Controller
         ]);
     }
 
+    public function updateUser(Request $request)
+    {
+        $rules = [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'user_name' => 'required|unique:users,user_name,'.auth()->user()->id,
+            'email' => 'required|unique:users,email,'.auth()->user()->id
+        ];
+        $messages = [
+            'first_name.required' => 'First name is required',
+            'last_name.required' => 'Last name is required',
+            'user_name.required' => 'User name is required',
+            'email.required' => 'Email is required',
+            'user_name.unique' => 'User name already exists',
+            'email.unique' => 'Email already exists'
+        ];
+        $payload = [
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
+            'user_name' => $request['user_name'],
+            'email' => $request['email'],
+            'phone_number' => $request['phone_number'],
+            'address' => $request['address'],
+            'gender' => $request['gender'],
+            'avatar' => $request['avatar'],
+        ];
+        $validator = Validator::make($payload, $rules, $messages);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 200);
+        }
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->user_name = $request['user_name'];
+        $user->email = $request['email'];
+        $user->phone_number = $request['phone_number'];
+        $user->address = $request['address'];
+        $user->gender = $request['gender'];
+        $user->avatar = $request['avatar'];
+        $user->save();
+        return response()->json([
+            'success' => true,
+            'data' =>  $user
+        ], 200);
+    }
+
     public function listUser(Request $request, $limit = 20, $offset = 0)
     {
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
-        $user = $this->user;
+        $user = new User;
         $usersCount = $user->get()->count();
         $listUser = fractal($user->skip($offset)->take($limit)->get(), $this->userTransformers);
         return response()->json([
