@@ -20,39 +20,34 @@ class PostController extends Controller
         $this->postTransformers = $postTransformers;
     }
 
-    public function listPost(Request $request, $limit = 20, $offset = 0)
+    public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc')
     {
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
-        if ($request->tag) {
+        $field = $request->input('sort_field', $field);
+        $type = $request->input('sort_type', $type);
+
+        if ($request->has('tag')) {
             $post = Post::whereHas('tag', function($q) use ($request) {
                 $q->where('slug', $request->tag);
-            })->orderBy('id', 'asc');
-            $postsCount = $post->get()->count();
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
-        } else if ($request->category) {
+            });
+        } else if ($request->has('category')) {
             $post = Post::whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);
-            })->orderBy('id', 'asc');
-            $postsCount = $post->get()->count();
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
-        } else if ($request->user) {
+            });
+        } else if ($request->has('user')) {
             $post = Post::whereHas('user', function($q) use ($request) {
                 $q->where('user_name', $request->user);
-            })->orderBy('id', 'asc');
-            $postsCount = $post->get()->count();
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
-        } else if ($request->favorited) {
+            });
+        } else if ($request->has('favorited')) {
             $post = Post::whereHas('userfavorite', function($q) use ($request) {
                 $q->where('user_name', $request->favorited);
-            })->orderBy('id', 'asc');
-            $postsCount = $post->get()->count();
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
+            });
         } else {
-            $post = Post::orderBy('id', 'asc');
-            $postsCount = $post->get()->count();
-            $listPost = fractal($post->skip($offset)->take($limit)->get(), $this->postTransformers);
+            $post = new Post;
         }
+        $postsCount = $post->get()->count();
+        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), $this->postTransformers);
         return response()->json([
             'success' => true,
             'data' => $listPost,

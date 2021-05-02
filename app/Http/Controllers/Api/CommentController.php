@@ -74,7 +74,6 @@ class CommentController extends Controller
                             ->where('user_id', auth()->user()->id)
                             ->where('id', $request->id)->first();
         $comment->delete();
-        //$comment = fractal($comment, $this->commentTransformers);
         return response()->json([
             'success' => true,
             'data' => $comment,
