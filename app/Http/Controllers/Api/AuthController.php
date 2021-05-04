@@ -51,7 +51,7 @@ class AuthController extends Controller
             'address' => $request->address,
             'gender' => $request->gender,
             'avatar' => $request->avatar,
-            'role_id' => Role::where('slug', 'guest')->first()->id,
+            'role_id' => Role::where('slug', 'user')->first()->id,
         ];
         $validator = Validator::make($payload, $rules, $messages);
         if ($validator->fails()) {
@@ -72,12 +72,9 @@ class AuthController extends Controller
     {
         if ($request->provider == 'facebook') {
             return $this->checkFacebook($request->access_token);
-        }
-
-        if ($request->provider == 'google') {
+        } else if ($request->provider == 'google') {
             return $this->checkGoogle($request->access_token);
         }
-
         $credentials = request(['user_name', 'password']);
         if(!auth()->attempt($credentials))
             return response()->json([
@@ -142,7 +139,7 @@ class AuthController extends Controller
                 'user_name' => 'fb_'.$profile['id'],
                 'password' => bcrypt(Str::random(9)),
                 'avatar' => $profile['picture']['data']['url'],
-                'role_id' => Role::where('slug', 'guest')->first()->id,
+                'role_id' => Role::where('slug', 'user')->first()->id,
             ]);
         }
 
@@ -175,7 +172,7 @@ class AuthController extends Controller
                 'user_name' => 'gg_'.$profile['sub'],
                 'password' => bcrypt(Str::random(9)),
                 'avatar' => $profile['picture'],
-                'role_id' => Role::where('slug', 'guest')->first()->id,
+                'role_id' => Role::where('slug', 'user')->first()->id,
             ]);
         }
 
