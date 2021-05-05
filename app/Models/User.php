@@ -55,6 +55,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isFollowing()
+    {
+        $user = auth('api')->user();
+        if ($user) {
+            return !!$this->following()->where('user_id', $user->id)->count();
+        } else {
+            return false;
+        }
+
+    }
+
     public function Post()
     {
     	return $this->hasMany('App\Models\Post', 'user_id', 'id');

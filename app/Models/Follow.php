@@ -7,16 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Follow extends Model
 {
     protected $table = 'follow';
-    protected $primaryKey = ['user_id', 'follower_id'];
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'user_id',
+        'follower_id'
+    ];
 
     public function User()
     {
     	return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-    public function Follower()
+    public function Following()
     {
-    	return $this->belongsTo('App\Models\User', 'follower_id', 'id');
+    	return $this->belongsTo('App\Models\User', 'following_id', 'id');
     }
 
 }

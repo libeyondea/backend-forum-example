@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers;
+namespace App\Transformers\SingleUser;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\User;
 
-class UserTransformers extends TransformerAbstract
+class SingleUserTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'role',
@@ -18,14 +18,11 @@ class UserTransformers extends TransformerAbstract
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'user_name' => $user->user_name,
-            'email' => $user->email,
-            'phone_number' => $user->phone_number,
-            'address' => $user->address,
-            'gender' => $user->gender,
             'avatar' => $user->avatar,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
-            'total_posts' =>$user->post->count(),
+            'total_posts' => $user->post->count(),
+            'following' => $user->isFollowing()
         ];
     }
 

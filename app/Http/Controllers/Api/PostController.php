@@ -4,20 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use League\Fractal\Resource\Collection;
 use App\Models\Post;
-use App\Transformers\PostTransformers;
+use App\Transformers\ListPost\ListPostTransformers;
+use App\Transformers\SinglePost\SinglePostTransformers;
 
 class PostController extends Controller
 {
-    private $post;
-    private $postTransformers;
+    private $listPostTransformers;
 
-    public function __construct(Post $post, PostTransformers $postTransformers)
+    private $singlePostTransformers;
+
+    public function __construct(ListPostTransformers $listPostTransformers, SinglePostTransformers $singlePostTransformers)
     {
-        $this->post = $post;
-        $this->postTransformers = $postTransformers;
+        $this->listPostTransformers = $listPostTransformers;
+        $this->singlePostTransformers = $singlePostTransformers;
     }
 
     public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc')
@@ -47,7 +47,7 @@ class PostController extends Controller
             $post = new Post;
         }
         $postsCount = $post->get()->count();
-        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), $this->postTransformers);
+        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), $this->listPostTransformers);
         return response()->json([
             'success' => true,
             'data' => $listPost,
@@ -60,7 +60,7 @@ class PostController extends Controller
     public function singlePost($slug)
     {
         $post = Post::where('slug', $slug);
-        $singlePost = fractal($post->first(), $this->postTransformers);
+        $singlePost = fractal($post->first(), $this->singlePostTransformers);
         return response()->json([
             'success' => true,
             'data' => $singlePost

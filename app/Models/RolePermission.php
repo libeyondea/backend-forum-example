@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RolePermission extends Model
 {
     protected $table = 'role_permission';
-    protected $primaryKey = ['role_id', 'permission_id'];
+    protected $primaryKey = ['id'];
 
     public function Role()
     {

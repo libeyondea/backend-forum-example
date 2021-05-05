@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers;
+namespace App\Transformers\ListComment;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Comment;
 
-class CommentTransformers extends TransformerAbstract
+class ListCommentTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'user',

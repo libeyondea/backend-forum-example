@@ -12,7 +12,8 @@ use Carbon\Carbon;
 use App\Models\Follow;
 use App\Models\Role;
 use App\Models\User;
-use App\Transformers\UserTransformers;
+use App\Transformers\SingleUser\SingleUserTransformers;
+use App\Transformers\SettingUser\SettingUserTransformers;
 use GuzzleHttp\Client;
 
 
@@ -20,14 +21,17 @@ class AuthController extends Controller
 {
     private $user;
 
-    private $userTransformers;
+    private $singleUserTransformers;
+
+    private $settingUserTransformers;
 
     private $client;
 
-    public function __construct(User $user, UserTransformers $userTransformers, Client $client)
+    public function __construct(User $user, SingleUserTransformers $singleUserTransformers, SettingUserTransformers $settingUserTransformers, Client $client)
     {
         $this->user = $user;
-        $this->userTransformers = $userTransformers;
+        $this->singleUserTransformers = $singleUserTransformers;
+        $this->settingUserTransformers = $settingUserTransformers;
         $this->client = $client;
     }
 
@@ -193,20 +197,25 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logoutUser(Request $request)
     {
-        $request->user()->token()->revoke();
+        $user = auth()->user()->token();
+        $user->revoke();
         return response()->json([
             'success' => true,
             'data' => 'Logout success'
         ]);
     }
 
-    public function user(Request $request)
+    public function currentUser(Request $request)
     {
         return response()->json([
             'success' => true,
-            'data' => auth()->user()
+            'data' => [
+                'id' => auth()->user()->id,
+                'user_name' =>auth()->user()->user_name,
+                'avatar' => auth()->user()->avatar
+            ]
         ]);
     }
 
@@ -259,29 +268,24 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function listUser(Request $request, $limit = 20, $offset = 0)
+    public function singleUser($user_name)
     {
-        $limit = $request->get('limit', $limit);
-        $offset = $request->get('offset', $offset);
-        $user = new User;
-        $usersCount = $user->get()->count();
-        $listUser = fractal($user->skip($offset)->take($limit)->get(), $this->userTransformers);
+        $user = User::where('user_name', $user_name);
+        $singleUser = fractal($user->first(), $this->singleUserTransformers);
         return response()->json([
             'success' => true,
-            'data' => $listUser,
-            'meta' => [
-                'users_count' => $usersCount
-            ]
+            'data' => $singleUser
         ], 200);
     }
 
-    public function singleUser($user_name)
+    public function editUser()
     {
-        $user = $this->user->where('user_name', $user_name);
-        $singleUser = fractal($user->first(), $this->userTransformers);
+        $user = auth()->user();
+        $settingUser = fractal($user, $this->settingUserTransformers);
         return response()->json([
             'success' => true,
-            'data' => $singleUser,
+            'data' => $settingUser
         ], 200);
     }
+
 }

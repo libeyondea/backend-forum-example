@@ -5,18 +5,19 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Transformers\CategoryTransformers;
+use App\Transformers\ListCategory\ListCategoryTransformers;
+use App\Transformers\SingleCategory\SingleCategoryTransformers;
 
 class CategoryController extends Controller
 {
-    private $category;
+    private $listCategoryTransformers;
 
-    private $categoryTransformers;
+    private $singleCategoryTransformers;
 
-    public function __construct(Category $category, CategoryTransformers $categoryTransformers)
+    public function __construct(ListCategoryTransformers $listCategoryTransformers, SingleCategoryTransformers $singleCategoryTransformers)
     {
-        $this->category = $category;
-        $this->categoryTransformers = $categoryTransformers;
+        $this->listCategoryTransformers = $listCategoryTransformers;
+        $this->singleCategoryTransformers = $singleCategoryTransformers;
     }
 
     public function listCategory(Request $request, $limit = 20, $offset = 0)
@@ -25,7 +26,7 @@ class CategoryController extends Controller
         $offset = $request->get('offset', $offset);
         $category = Category::orderBy('id', 'asc');
         $categoriesCount = $category->get()->count();
-        $listCategory = fractal($category->skip($offset)->take($limit)->get(), $this->categoryTransformers);
+        $listCategory = fractal($category->skip($offset)->take($limit)->get(), $this->listCategoryTransformers);
         return response()->json([
             'success' => true,
             'data' => $listCategory,
@@ -38,7 +39,7 @@ class CategoryController extends Controller
     public function singleCategory($slug)
     {
         $category = Category::where('slug', $slug);
-        $singleCategory = fractal($category->first(), $this->categoryTransformers);
+        $singleCategory = fractal($category->first(), $this->singleCategoryTransformers);
         return response()->json([
             'success' => true,
             'data' => $singleCategory

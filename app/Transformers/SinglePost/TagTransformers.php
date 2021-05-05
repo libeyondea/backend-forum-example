@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers;
+namespace App\Transformers\SinglePost;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Tag;
@@ -12,11 +12,7 @@ class TagTransformers extends TransformerAbstract
         return [
             'id' => $tag->id,
             'title' => $tag->title,
-            'slug' => $tag->slug,
-            'content' => $tag->content,
-            'created_at' => $tag->created_at,
-            'updated_at' => $tag->updated_at,
-            'total_posts' =>$tag->post->count(),
+            'slug' => $tag->slug
         ];
     }
 }

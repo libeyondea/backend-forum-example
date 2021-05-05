@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FavoritePost extends Model
 {
     protected $table = 'favorite_post';
-    protected $primaryKey = ['user_id', 'post_id'];
+    protected $primaryKey = ['id'];
 
     public function User()
     {
