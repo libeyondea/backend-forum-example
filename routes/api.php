@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
-use App\Http\Controllers\Api\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,10 +43,13 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::get('current_user', [AuthController::class, 'currentUser']);
     //
     Route::put('users', [AuthController::class, 'updateUser']);
-    Route::get('users/profile/edit', [AuthController::class, 'editUser']);
+    Route::get('users/{user_name}/edit', [AuthController::class, 'editUser']);
     //
-    Route::post('follows', [FollowController::class, 'follow']);
-    Route::delete('follows', [FollowController::class, 'unFollow']);
+    Route::post('follow_user', [AuthController::class, 'followUser']);
+    Route::delete('follow_user', [AuthController::class, 'unFollowUser']);
+    //
+    Route::post('follow_tag', [TagController::class, 'followTag']);
+    Route::delete('follow_tag', [TagController::class, 'unFollowTag']);
     //
     Route::post('comments', [CommentController::class, 'createComment']);
     Route::delete('comments', [CommentController::class, 'deleteComment']);

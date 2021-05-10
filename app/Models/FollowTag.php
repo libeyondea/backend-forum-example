@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Follow extends Model
+class FollowTag extends Model
 {
-    protected $table = 'follow';
+    protected $table = 'follow_tag';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'user_id',
-        'follower_id'
+        'tag_id'
     ];
 
     public function User()
@@ -19,9 +19,9 @@ class Follow extends Model
     	return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-    public function Following()
+    public function Tag()
     {
-    	return $this->belongsTo('App\Models\User', 'following_id', 'id');
+    	return $this->belongsTo('App\Models\Tag', 'tag_id', 'id');
     }
 
 }

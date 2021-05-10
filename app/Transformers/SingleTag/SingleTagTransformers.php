@@ -17,6 +17,7 @@ class SingleTagTransformers extends TransformerAbstract
             'created_at' => $tag->created_at,
             'updated_at' => $tag->updated_at,
             'total_posts' =>$tag->post->count(),
+            'following' => $tag->isFollowing()
         ];
     }
 }

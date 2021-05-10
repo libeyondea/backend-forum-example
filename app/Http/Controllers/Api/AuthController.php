@@ -9,29 +9,28 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Models\Follow;
+use App\Models\FollowUser;
+use App\Models\FollowTag;
+use App\Models\Tag;
 use App\Models\Role;
 use App\Models\User;
 use App\Transformers\SingleUser\SingleUserTransformers;
-use App\Transformers\SettingUser\SettingUserTransformers;
+use App\Transformers\EditUser\EditUserTransformers;
 use GuzzleHttp\Client;
 
 
 class AuthController extends Controller
 {
-    private $user;
-
     private $singleUserTransformers;
 
-    private $settingUserTransformers;
+    private $editUserTransformers;
 
     private $client;
 
-    public function __construct(User $user, SingleUserTransformers $singleUserTransformers, SettingUserTransformers $settingUserTransformers, Client $client)
+    public function __construct(SingleUserTransformers $singleUserTransformers, EditUserTransformers $editUserTransformers, Client $client)
     {
-        $this->user = $user;
         $this->singleUserTransformers = $singleUserTransformers;
-        $this->settingUserTransformers = $settingUserTransformers;
+        $this->editUserTransformers = $editUserTransformers;
         $this->client = $client;
     }
 
@@ -278,14 +277,73 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function editUser()
+    public function editUser($user_name)
     {
         $user = auth()->user();
-        $settingUser = fractal($user, $this->settingUserTransformers);
-        return response()->json([
-            'success' => true,
-            'data' => $settingUser
-        ], 200);
+        if($user->user_name == $user_name) {
+            $editUser = fractal($user, $this->editUserTransformers);
+            return response()->json([
+                'success' => true,
+                'data' => $editUser
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'errors' => 'User does not exist'
+            ], 404);
+        }
     }
 
+    public function followUser(Request $request)
+    {
+        $user = auth()->user();
+
+        $userFollowing = User::where('user_name', $request->user_name)->first();
+
+        $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
+
+        if(!$followCheck) {
+            $follow = new FollowUser;
+            $follow->user_id = $user->id;
+            $follow->following_id = $userFollowing->id;
+            $follow->save();
+            return response()->json([
+                'success' => true,
+                'data' =>  [
+                    'id' => $follow->following->id,
+                    'user_name' => $follow->following->user_name
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'errors' =>  'folllowed'
+            ]);
+        }
+    }
+
+    public function unFollowUser(Request $request)
+    {
+        $user = auth()->user();
+
+        $userFollowing = User::where('user_name', $request->user_name)->first();
+
+        $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
+
+        if(!!$followCheck) {
+            $followCheck->delete();
+            return response()->json([
+                'success' => true,
+                'data' =>  [
+                    'id' => $followCheck->following->id,
+                    'user_name' => $followCheck->following->user_name
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'errors' =>  'have not followed'
+            ]);
+        }
+    }
 }

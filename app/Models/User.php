@@ -81,13 +81,18 @@ class User extends Authenticatable
     	return $this->belongsTo('App\Models\Role', 'role_id', 'id');
     }
 
-    public function Follow()
+    public function FollowUser()
     {
-    	return $this->hasMany('App\Models\Follow', 'user_id', 'id');
+    	return $this->hasMany('App\Models\FollowUser', 'user_id', 'id');
     }
 
     public function Following()
     {
-    	return $this->hasMany('App\Models\Follow', 'following_id', 'id');
+    	return $this->hasMany('App\Models\FollowUser', 'following_id', 'id');
+    }
+
+    public function FollowTag()
+    {
+    	return $this->hasMany('App\Models\FollowTag', 'user_id', 'id');
     }
 }

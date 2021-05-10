@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2021 at 09:45 AM
+-- Generation Time: May 09, 2021 at 11:06 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -105,10 +105,24 @@ CREATE TABLE `favorite_post` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `follow`
+-- Table structure for table `follow_tag`
 --
 
-CREATE TABLE `follow` (
+CREATE TABLE `follow_tag` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `tag_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `follow_user`
+--
+
+CREATE TABLE `follow_user` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `following_id` bigint(20) UNSIGNED NOT NULL,
@@ -659,18 +673,27 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `favorite_post`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unq_user_id_post_id` (`user_id`, `post_id`),
+  ADD UNIQUE KEY `unq_user_id_post_id` (`user_id`,`post_id`),
   ADD KEY `idx_p_u_user_id` (`user_id`),
   ADD KEY `idx_p_u_post_id` (`post_id`);
 
 --
--- Indexes for table `follow`
+-- Indexes for table `follow_tag`
 --
-ALTER TABLE `follow`
+ALTER TABLE `follow_tag`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unq_user_id_following_id` (`user_id`, `following_id`),
-  ADD KEY `idx_user_id` (`user_id`),
-  ADD KEY `idx_following_id` (`following_id`);
+  ADD UNIQUE KEY `unq_user_id_tag_id` (`user_id`,`tag_id`),
+  ADD KEY `idx_f_t_user_id` (`user_id`),
+  ADD KEY `idx_f_t_tag_id` (`tag_id`);
+
+--
+-- Indexes for table `follow_user`
+--
+ALTER TABLE `follow_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unq_user_id_following_id` (`user_id`,`following_id`),
+  ADD KEY `idx_f_u_user_id` (`user_id`),
+  ADD KEY `idx_f_u_following_id` (`following_id`);
 
 --
 -- Indexes for table `migrations`
@@ -740,7 +763,7 @@ ALTER TABLE `post`
 --
 ALTER TABLE `post_tag`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unq_post_id_tag_id` (`post_id`, `tag_id`),
+  ADD UNIQUE KEY `unq_post_id_tag_id` (`post_id`,`tag_id`),
   ADD KEY `idx_p_t_post_id` (`post_id`),
   ADD KEY `idx_p_t_tag_id` (`tag_id`);
 
@@ -756,7 +779,7 @@ ALTER TABLE `role`
 --
 ALTER TABLE `role_permission`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unq_role_id_permission_id` (`role_id`, `permission_id`),
+  ADD UNIQUE KEY `unq_role_id_permission_id` (`role_id`,`permission_id`),
   ADD KEY `idx_r_p_role_id` (`role_id`),
   ADD KEY `idx_r_p_permission_id` (`permission_id`);
 
@@ -799,6 +822,24 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `favorite_post`
+--
+ALTER TABLE `favorite_post`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `follow_tag`
+--
+ALTER TABLE `follow_tag`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `follow_user`
+--
+ALTER TABLE `follow_user`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -829,10 +870,22 @@ ALTER TABLE `post`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
+-- AUTO_INCREMENT for table `post_tag`
+--
+ALTER TABLE `post_tag`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+
+--
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `role_permission`
+--
+ALTER TABLE `role_permission`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `tag`
@@ -845,30 +898,6 @@ ALTER TABLE `tag`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `favorite_post`
---
-ALTER TABLE `favorite_post`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
---
--- AUTO_INCREMENT for table `follow`
---
-ALTER TABLE `follow`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
---
--- AUTO_INCREMENT for table `post_tag`
---
-ALTER TABLE `post_tag`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
-
---
--- AUTO_INCREMENT for table `role_permission`
---
-ALTER TABLE `role_permission`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Constraints for dumped tables
@@ -890,11 +919,18 @@ ALTER TABLE `favorite_post`
   ADD CONSTRAINT `fk_p_u_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `follow`
+-- Constraints for table `follow_tag`
 --
-ALTER TABLE `follow`
-  ADD CONSTRAINT `fk_u_following_id` FOREIGN KEY (`following_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_u_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `follow_tag`
+  ADD CONSTRAINT `fk_f_t_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_f_t_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `follow_user`
+--
+ALTER TABLE `follow_user`
+  ADD CONSTRAINT `fk_f_u_following_id` FOREIGN KEY (`following_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_f_u_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `post`
