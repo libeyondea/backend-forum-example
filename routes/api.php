@@ -42,8 +42,13 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::get('current_user/logout', [AuthController::class, 'logoutUser']);
     Route::get('current_user', [AuthController::class, 'currentUser']);
     //
-    Route::put('users', [AuthController::class, 'updateUser']);
+    Route::put('users/{user_name}', [AuthController::class, 'updateUser']);
     Route::get('users/{user_name}/edit', [AuthController::class, 'editUser']);
+    //
+    Route::post('posts', [PostController::class, 'createPost']);
+    Route::put('posts/{slug}', [PostController::class, 'updatePost']);
+    Route::delete('posts/{slug}', [PostController::class, 'deletePost']);
+    Route::get('posts/{slug}/edit', [PostController::class, 'editPost']);
     //
     Route::post('follow_user', [AuthController::class, 'followUser']);
     Route::delete('follow_user', [AuthController::class, 'unFollowUser']);
@@ -52,7 +57,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::delete('follow_tag', [TagController::class, 'unFollowTag']);
     //
     Route::post('comments', [CommentController::class, 'createComment']);
-    Route::delete('comments', [CommentController::class, 'deleteComment']);
-    Route::put('comments', [CommentController::class, 'updateComment']);
+    Route::delete('comments/{id}', [CommentController::class, 'deleteComment']);
+    Route::put('comments/{id}', [CommentController::class, 'updateComment']);
     Route::get('comments/{id}/edit', [CommentController::class, 'editComment']);
 });

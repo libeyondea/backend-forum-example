@@ -70,8 +70,15 @@ class TagController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' =>  'folllowed'
-            ]);
+                'errors' =>  'folllowed',
+                'errors' => [
+                    'type' => '',
+                    'title' => 'Tag folllowed.',
+                    'status' => 400,
+                    'detail' => '',
+                    'instance' => ''
+                ]
+                ], 400);
         }
     }
 
@@ -95,8 +102,14 @@ class TagController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' =>  'have not followed'
-            ]);
+                'errors' => [
+                    'type' => '',
+                    'title' => 'Tag unFolllowed.',
+                    'status' => 400,
+                    'detail' => '',
+                    'instance' => ''
+                ]
+            ], 400);
         }
     }
 }

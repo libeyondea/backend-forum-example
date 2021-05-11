@@ -60,8 +60,15 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
-            ], 200);
+                'errors' => [
+                    'type' => '/errors/validation-error',
+                    'title' => 'Your request parameters did not validate.',
+                    'status' => 400,
+                    'invalid_params' => $validator->errors(),
+                    'detail' => 'Your request parameters did not validate.',
+                    'instance' => '/register/users/'
+                ]
+            ], 400);
         }
         $user = new User($payload);
         $user->save();
@@ -83,9 +90,13 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => [
-                    "user" => "User name or password does not exists"
+                    'type' => '/errors/incorrect-user-pass',
+                    'title' => 'Incorrect username or password.',
+                    'status' => 401,
+                    'detail' => 'Authentication failed due to incorrect username or password.',
+                    'instance' => '/login/users/'
                 ]
-            ], 200);
+            ], 401);
         $tokenResult = auth()->user()->createToken('Personal Access Token');
         return response()->json([
             'success' => true,
@@ -202,7 +213,9 @@ class AuthController extends Controller
         $user->revoke();
         return response()->json([
             'success' => true,
-            'data' => 'Logout success'
+            'data' => [
+                'user' => 'Logout user success'
+            ]
         ]);
     }
 
@@ -218,53 +231,67 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateUser(Request $request)
+    public function updateUser(Request $request, $user_name)
     {
-        $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'user_name' => 'required|unique:users,user_name,'.auth()->user()->id,
-            'email' => 'required|unique:users,email,'.auth()->user()->id
-        ];
-        $messages = [
-            'first_name.required' => 'First name is required',
-            'last_name.required' => 'Last name is required',
-            'user_name.required' => 'User name is required',
-            'email.required' => 'Email is required',
-            'user_name.unique' => 'User name already exists',
-            'email.unique' => 'Email already exists'
-        ];
-        $payload = [
-            'first_name' => $request['first_name'],
-            'last_name' => $request['last_name'],
-            'user_name' => $request['user_name'],
-            'email' => $request['email'],
-            'phone_number' => $request['phone_number'],
-            'address' => $request['address'],
-            'gender' => $request['gender'],
-            'avatar' => $request['avatar'],
-        ];
-        $validator = Validator::make($payload, $rules, $messages);
-        if ($validator->fails()) {
+        $user = auth()->user();
+        if($user->user_name == $user_name) {
+            $rules = [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'user_name' => 'required|unique:users,user_name,'.$user->id,
+                'email' => 'required|unique:users,email,'.$user->id
+            ];
+            $messages = [
+                'first_name.required' => 'First name is required',
+                'last_name.required' => 'Last name is required',
+                'user_name.required' => 'User name is required',
+                'email.required' => 'Email is required',
+                'user_name.unique' => 'User name already exists',
+                'email.unique' => 'Email already exists'
+            ];
+            $payload = [
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'user_name' => $request['user_name'],
+                'email' => $request['email'],
+                'phone_number' => $request['phone_number'],
+                'address' => $request['address'],
+                'gender' => $request['gender'],
+                'avatar' => $request['avatar'],
+            ];
+            $validator = Validator::make($payload, $rules, $messages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            $user = User::where('id', $user->id)->first();
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
+            $user->user_name = $request['user_name'];
+            $user->email = $request['email'];
+            $user->phone_number = $request['phone_number'];
+            $user->address = $request['address'];
+            $user->gender = $request['gender'];
+            $user->avatar = $request['avatar'];
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'data' =>  $user
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
-            ], 200);
+                'errors' => [
+                    'type' => '/errors/incorrect-user',
+                    'title' => 'Incorrect user.',
+                    'status' => 401,
+                    'detail' => 'User does not exist.',
+                    'instance' => '/update/users/{user_name}'
+                ]
+            ], 401);
         }
-        $user = User::where('id', auth()->user()->id)->first();
-        $user->first_name = $request['first_name'];
-        $user->last_name = $request['last_name'];
-        $user->user_name = $request['user_name'];
-        $user->email = $request['email'];
-        $user->phone_number = $request['phone_number'];
-        $user->address = $request['address'];
-        $user->gender = $request['gender'];
-        $user->avatar = $request['avatar'];
-        $user->save();
-        return response()->json([
-            'success' => true,
-            'data' =>  $user
-        ], 200);
     }
 
     public function singleUser($user_name)
@@ -289,8 +316,14 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' => 'User does not exist'
-            ], 404);
+                'errors' => [
+                    'type' => '/errors/incorrect-user',
+                    'title' => 'Incorrect user.',
+                    'status' => 401,
+                    'detail' => 'User does not exist.',
+                    'instance' => '/edit/users/{user_name}/edit'
+                ]
+            ], 401);
         }
     }
 
@@ -317,8 +350,14 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' =>  'folllowed'
-            ]);
+                'errors' => [
+                    'type' => '',
+                    'title' => 'User folllowed.',
+                    'status' => 400,
+                    'detail' => '',
+                    'instance' => ''
+                ]
+            ], 400);
         }
     }
 
@@ -342,8 +381,14 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' =>  'have not followed'
-            ]);
+                'errors' => [
+                    'type' => '',
+                    'title' => 'User unFolllowed.',
+                    'status' => 400,
+                    'detail' => '',
+                    'instance' => ''
+                ]
+            ], 400);
         }
     }
 }
