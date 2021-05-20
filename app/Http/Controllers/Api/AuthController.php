@@ -15,8 +15,8 @@ use App\Models\Tag;
 use App\Models\Role;
 use App\Models\User;
 use App\Transformers\SingleUser\SingleUserTransformers;
-use App\Transformers\EditUser\EditUserTransformers;
 use GuzzleHttp\Client;
+use File;
 
 
 class AuthController extends Controller
@@ -27,22 +27,64 @@ class AuthController extends Controller
 
     private $client;
 
-    public function __construct(SingleUserTransformers $singleUserTransformers, EditUserTransformers $editUserTransformers, Client $client)
+    public function __construct(SingleUserTransformers $singleUserTransformers, Client $client)
     {
         $this->singleUserTransformers = $singleUserTransformers;
-        $this->editUserTransformers = $editUserTransformers;
         $this->client = $client;
+    }
+
+    public function imageUpload(Request $request) {
+        $rules = [
+            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+        ];
+        $messages = [
+            'image.required' => 'Image is required',
+            'image.mimes' => 'Image invalid',
+            'image.max' => 'Maximum image size to upload is 10000kb'
+        ];
+        $payload = [
+            'image' => $request->image,
+        ];
+        $validator = Validator::make($payload, $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'type' => '',
+                    'title' => 'Your request parameters did not validate',
+                    'status' => 200,
+                    'invalid_params' => $validator->errors(),
+                    'detail' => 'Your request parameters did not validate',
+                    'instance' => ''
+                ]
+            ], 200);
+        }
+
+        if($request->hasfile('image')) {
+            $imageName = time().'.'.$request->file('image')->extension();
+            $request->file('image')->move(public_path('images'), $imageName);
+
+            return response()->json([
+                'success' => true,
+                'data' => $imageName
+            ], 200);
+        }
     }
 
     public function register(Request $request)
     {
         $rules = [
             'user_name' => 'unique:users',
-            'email' => 'unique:users'
+            'email' => 'unique:users',
+            'avatar' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5000'
         ];
         $messages = [
             'user_name.unique' => 'User name already exists',
-            'email.unique' => 'Email already exists'
+            'email.unique' => 'Email already exists',
+            'avatar.image' => 'Avatar must be an image file',
+            'avatar.mimes' => 'Avatar file must be .png .jpg .jpeg .gif',
+            'avatar.max' => 'Maximum avatar size to upload is 5000kb'
         ];
         $payload = [
             'first_name' => $request->first_name,
@@ -61,17 +103,36 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => [
-                    'type' => '/errors/validation-error',
-                    'title' => 'Your request parameters did not validate.',
-                    'status' => 400,
+                    'type' => '',
+                    'title' => 'Your request parameters did not validate',
+                    'status' => 200,
                     'invalid_params' => $validator->errors(),
-                    'detail' => 'Your request parameters did not validate.',
-                    'instance' => '/register/users/'
+                    'detail' => 'Your request parameters did not validate',
+                    'instance' => ''
                 ]
-            ], 400);
+            ], 200);
         }
-        $user = new User($payload);
+
+        if($request->hasfile('avatar')) {
+            $avatarName = time().'.'.$request->file('avatar')->extension();
+            $request->file('avatar')->move(public_path('images'), $avatarName);
+        } else {
+            $avatarName = 'default_avatar.png';
+        }
+
+        $user = new User;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->user_name = $request->user_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->phone_number = $request->phone_number;
+        $user->address = $request->address;
+        $user->gender = $request->gender;
+        $user->avatar = $avatarName;
+        $user->role_id = Role::where('slug', 'user')->first()->id;
         $user->save();
+
         return response()->json([
             'success' => true,
             'data' =>  $user
@@ -90,13 +151,13 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => [
-                    'type' => '/errors/incorrect-user-pass',
+                    'type' => '',
                     'title' => 'Incorrect username or password.',
-                    'status' => 401,
-                    'detail' => 'Authentication failed due to incorrect username or password.',
-                    'instance' => '/login/users/'
+                    'status' => 200,
+                    'detail' => '',
+                    'instance' => ''
                 ]
-            ], 401);
+            ], 200);
         $tokenResult = auth()->user()->createToken('Personal Access Token');
         return response()->json([
             'success' => true,
@@ -143,68 +204,103 @@ class AuthController extends Controller
 
     public function checkUserFacebook($profile)
     {
-        $user = User::where('facebook_id', $profile['id'])->first();
-        if (!$user) {
-            $user = User::create([
-                'facebook_id' => $profile['id'],
-                'first_name' => $profile['first_name'],
-                'last_name' => $profile['last_name'],
-                'email' => $profile['email'],
-                'user_name' => 'fb_'.$profile['id'],
-                'password' => bcrypt(Str::random(9)),
-                'avatar' => $profile['picture']['data']['url'],
-                'role_id' => Role::where('slug', 'user')->first()->id,
+        try {
+            $user = User::where('facebook_id', $profile['id'])->first();
+            if (!$user) {
+                $avatarContent = file_get_contents($profile['picture']['data']['url']);
+                $avatarName = time() . '.jpg';
+                File::put(public_path() . '/images/' . $avatarName, $avatarContent);
+
+                $user = User::create([
+                    'facebook_id' => $profile['id'],
+                    'first_name' => $profile['first_name'],
+                    'last_name' => $profile['last_name'],
+                    'email' => $profile['email'],
+                    'user_name' => 'fb_'.$profile['id'],
+                    'password' => bcrypt(Str::random(9)),
+                    'avatar' => $avatarName,
+                    'role_id' => Role::where('slug', 'user')->first()->id,
+                ]);
+            }
+
+            $tokenResult = $user->createToken('Personal Access Client');
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $user->id,
+                    'user_name' => $user->user_name,
+                    'avatar' => $user->avatar,
+                    'access_token' => $tokenResult->accessToken,
+                    'token_type' => 'Bearer',
+                    'expires_at' => Carbon::parse(
+                        $tokenResult->token->expires_at
+                    )->toDateTimeString()
+                ]
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'type' => '',
+                    'title' => $e->getMessage(),
+                    'status' => 500,
+                    'detail' => $e->getMessage(),
+                    'instance' => ''
+                ]
+            ], 500);
         }
-
-        $tokenResult = $user->createToken('Personal Access Client');
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'id' => $user->id,
-                'user_name' => $user->user_name,
-                'avatar' => $user->avatar,
-                'access_token' => $tokenResult->accessToken,
-                'token_type' => 'Bearer',
-                'expires_at' => Carbon::parse(
-                    $tokenResult->token->expires_at
-                )->toDateTimeString()
-            ]
-        ]);
     }
 
     public function checkUserGoogle($profile)
     {
-        $user = User::where('google_id', $profile['sub'])->first();
-        if (!$user) {
-            $user = User::create([
-                'google_id' => $profile['sub'],
-                'first_name' => $profile['given_name'],
-                'last_name' => $profile['family_name'],
-                'email' => $profile['email'],
-                'user_name' => 'gg_'.$profile['sub'],
-                'password' => bcrypt(Str::random(9)),
-                'avatar' => $profile['picture'],
-                'role_id' => Role::where('slug', 'user')->first()->id,
+        try{
+            $user = User::where('google_id', $profile['sub'])->first();
+            if (!$user) {
+
+                $avatarContent = file_get_contents($profile['picture']);
+                $avatarName = time() . '.jpg';
+                File::put(public_path() . '/images/' . $avatarName, $avatarContent);
+
+                $user = User::create([
+                    'google_id' => $profile['sub'],
+                    'first_name' => $profile['given_name'],
+                    'last_name' => $profile['family_name'],
+                    'email' => $profile['email'],
+                    'user_name' => 'gg_'.$profile['sub'],
+                    'password' => bcrypt(Str::random(9)),
+                    'avatar' => $avatarName,
+                    'role_id' => Role::where('slug', 'user')->first()->id,
+                ]);
+            }
+
+            $tokenResult = $user->createToken('Personal Access Client');
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $user->id,
+                    'user_name' => $user->user_name,
+                    'avatar' => $user->avatar,
+                    'access_token' => $tokenResult->accessToken,
+                    'token_type' => 'Bearer',
+                    'expires_at' => Carbon::parse(
+                        $tokenResult->token->expires_at
+                    )->toDateTimeString()
+                ]
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'type' => '',
+                    'title' => $e->getMessage(),
+                    'status' => 500,
+                    'detail' => $e->getMessage(),
+                    'instance' => ''
+                ]
+            ], 500);
         }
-
-        $tokenResult = $user->createToken('Personal Access Client');
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'id' => $user->id,
-                'user_name' => $user->user_name,
-                'avatar' => $user->avatar,
-                'access_token' => $tokenResult->accessToken,
-                'token_type' => 'Bearer',
-                'expires_at' => Carbon::parse(
-                    $tokenResult->token->expires_at
-                )->toDateTimeString()
-            ]
-        ]);
     }
 
     public function logoutUser(Request $request)
@@ -231,107 +327,21 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateUser(Request $request, $user_name)
-    {
-        $user = auth()->user();
-        if($user->user_name == $user_name) {
-            $rules = [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'user_name' => 'required|unique:users,user_name,'.$user->id,
-                'email' => 'required|unique:users,email,'.$user->id
-            ];
-            $messages = [
-                'first_name.required' => 'First name is required',
-                'last_name.required' => 'Last name is required',
-                'user_name.required' => 'User name is required',
-                'email.required' => 'Email is required',
-                'user_name.unique' => 'User name already exists',
-                'email.unique' => 'Email already exists'
-            ];
-            $payload = [
-                'first_name' => $request['first_name'],
-                'last_name' => $request['last_name'],
-                'user_name' => $request['user_name'],
-                'email' => $request['email'],
-                'phone_number' => $request['phone_number'],
-                'address' => $request['address'],
-                'gender' => $request['gender'],
-                'avatar' => $request['avatar'],
-            ];
-            $validator = Validator::make($payload, $rules, $messages);
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 200);
-            }
-            $user = User::where('id', $user->id)->first();
-            $user->first_name = $request['first_name'];
-            $user->last_name = $request['last_name'];
-            $user->user_name = $request['user_name'];
-            $user->email = $request['email'];
-            $user->phone_number = $request['phone_number'];
-            $user->address = $request['address'];
-            $user->gender = $request['gender'];
-            $user->avatar = $request['avatar'];
-            $user->save();
-            return response()->json([
-                'success' => true,
-                'data' =>  $user
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'errors' => [
-                    'type' => '/errors/incorrect-user',
-                    'title' => 'Incorrect user.',
-                    'status' => 401,
-                    'detail' => 'User does not exist.',
-                    'instance' => '/update/users/{user_name}'
-                ]
-            ], 401);
-        }
-    }
-
     public function singleUser($user_name)
     {
         $user = User::where('user_name', $user_name);
-        $singleUser = fractal($user->first(), $this->singleUserTransformers);
+        $singleUser = fractal($user->firstOrFail(), $this->singleUserTransformers);
         return response()->json([
             'success' => true,
             'data' => $singleUser
         ], 200);
     }
 
-    public function editUser($user_name)
-    {
-        $user = auth()->user();
-        if($user->user_name == $user_name) {
-            $editUser = fractal($user, $this->editUserTransformers);
-            return response()->json([
-                'success' => true,
-                'data' => $editUser
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'errors' => [
-                    'type' => '/errors/incorrect-user',
-                    'title' => 'Incorrect user.',
-                    'status' => 401,
-                    'detail' => 'User does not exist.',
-                    'instance' => '/edit/users/{user_name}/edit'
-                ]
-            ], 401);
-        }
-    }
-
     public function followUser(Request $request)
     {
         $user = auth()->user();
 
-        $userFollowing = User::where('user_name', $request->user_name)->first();
+        $userFollowing = User::where('user_name', $request->user_name)->firstOrFail();
 
         $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
 
@@ -365,9 +375,9 @@ class AuthController extends Controller
     {
         $user = auth()->user();
 
-        $userFollowing = User::where('user_name', $request->user_name)->first();
+        $userFollowing = User::where('user_name', $request->user_name)->firstOrFail();
 
-        $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
+        $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->firstOrFail();
 
         if(!!$followCheck) {
             $followCheck->delete();

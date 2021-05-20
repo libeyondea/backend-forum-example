@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers\EditUser;
+namespace App\Transformers\EditProfile;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Role;

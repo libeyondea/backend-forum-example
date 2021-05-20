@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,8 +43,12 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::get('current_user/logout', [AuthController::class, 'logoutUser']);
     Route::get('current_user', [AuthController::class, 'currentUser']);
     //
-    Route::put('users/{user_name}', [AuthController::class, 'updateUser']);
-    Route::get('users/{user_name}/edit', [AuthController::class, 'editUser']);
+    Route::get('tags-followed', [TagController::class, 'listTagFollowed']);
+    //
+    Route::get('settings/profile/edit', [SettingController::class, 'editProfile']);
+    Route::post('settings/profile', [SettingController::class, 'updateProfile']);
+    Route::get('settings/customization/edit', [SettingController::class, 'editCustomization']);
+    Route::put('settings/customization', [SettingController::class, 'updateCustomization']);
     //
     Route::post('posts', [PostController::class, 'createPost']);
     Route::put('posts/{slug}', [PostController::class, 'updatePost']);
@@ -60,4 +65,6 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::delete('comments/{id}', [CommentController::class, 'deleteComment']);
     Route::put('comments/{id}', [CommentController::class, 'updateComment']);
     Route::get('comments/{id}/edit', [CommentController::class, 'editComment']);
+    //
+    Route::post('images/upload', [AuthController::class, 'imageUpload']);
 });

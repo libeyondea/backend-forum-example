@@ -39,7 +39,7 @@ class CategoryController extends Controller
     public function singleCategory($slug)
     {
         $category = Category::where('slug', $slug);
-        $singleCategory = fractal($category->first(), $this->singleCategoryTransformers);
+        $singleCategory = fractal($category->firstOrFail(), $this->singleCategoryTransformers);
         return response()->json([
             'success' => true,
             'data' => $singleCategory

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers\EditUser;
+namespace App\Transformers\EditProfile;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\User;
 
-class EditUserTransformers extends TransformerAbstract
+class EditProfileTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'role',

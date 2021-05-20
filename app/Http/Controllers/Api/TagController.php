@@ -37,10 +37,32 @@ class TagController extends Controller
         ], 200);
     }
 
+    public function listTagFollowed(Request $request, $limit = 20, $offset = 0)
+    {
+        $user = auth()->user();
+        $limit = $request->get('limit', $limit);
+        $offset = $request->get('offset', $offset);
+
+        $tag = Tag::whereHas('followtag', function($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        $tagsCount = $tag->get()->count();
+        $listTagFollowed = fractal($tag->skip($offset)->take($limit)->get(), $this->listTagTransformers);
+
+        return response()->json([
+            'success' => true,
+            'data' => $listTagFollowed,
+            'meta' => [
+                'tags_count' => $tagsCount
+            ]
+        ], 200);
+    }
+
     public function singleTag($slug)
     {
         $tag = Tag::where('slug', $slug);
-        $singleTag = fractal($tag->first(), $this->singleTagTransformers);
+        $singleTag = fractal($tag->firstOrFail(), $this->singleTagTransformers);
         return response()->json([
             'success' => true,
             'data' => $singleTag
@@ -51,7 +73,7 @@ class TagController extends Controller
     {
         $user = auth()->user();
 
-        $tagFollowing = Tag::where('slug', $request->slug)->first();
+        $tagFollowing = Tag::where('slug', $request->slug)->firstOrFail();
 
         $followCheck = FollowTag::where('user_id', $user->id)->where('tag_id', $tagFollowing->id)->first();
 
@@ -73,9 +95,9 @@ class TagController extends Controller
                 'errors' =>  'folllowed',
                 'errors' => [
                     'type' => '',
-                    'title' => 'Tag folllowed.',
+                    'title' => 'Tag folllowed',
                     'status' => 400,
-                    'detail' => '',
+                    'detail' => 'Tag folllowed',
                     'instance' => ''
                 ]
                 ], 400);
@@ -86,9 +108,9 @@ class TagController extends Controller
     {
         $user = auth()->user();
 
-        $tagFollowing = Tag::where('slug', $request->slug)->first();
+        $tagFollowing = Tag::where('slug', $request->slug)->firstOrFail();
 
-        $followCheck = FollowTag::where('user_id', $user->id)->where('tag_id', $tagFollowing->id)->first();
+        $followCheck = FollowTag::where('user_id', $user->id)->where('tag_id', $tagFollowing->id)->firstOrFail();
 
         if(!!$followCheck) {
             $followCheck->delete();

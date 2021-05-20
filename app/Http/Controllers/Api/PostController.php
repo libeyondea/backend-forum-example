@@ -23,15 +23,16 @@ class PostController extends Controller
         $this->singlePostTransformers = $singlePostTransformers;
     }
 
-    public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc')
+    public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
     {
         $user = auth('api')->user();
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
+        $tab = $request->get('tab', $tab);
 
-        if ($request->tab == 'latest') {
+        if ($tab == 'latest') {
             $type = 'desc';
-        } else if ($request->tab == 'oldest') {
+        } else if ($tab == 'oldest') {
             $type = 'asc';
         }
 
@@ -39,7 +40,7 @@ class PostController extends Controller
             $post = Post::whereHas('tag', function($q) use ($request) {
                 $q->where('slug', $request->tag);
             });
-            if ($request->has('tab') && $request->tab == 'feed' && $user) {
+            if ($tab == 'feed' && $user) {
                 $post = $post->where(function($subQuery) use ($user)
                 {
                     $subQuery->whereHas('tag', function($q) use ($user) {
@@ -57,7 +58,7 @@ class PostController extends Controller
             $post = Post::whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);
             });
-            if ($request->has('tab') && $request->tab == 'feed' && $user) {
+            if ($tab == 'feed' && $user) {
                 $post = $post->where(function($subQuery) use ($user)
                 {
                     $subQuery->whereHas('user', function($q) use ($user) {
@@ -81,7 +82,7 @@ class PostController extends Controller
             });
         } else {
             $post = new Post;
-            if ($request->has('tab') && $request->tab == 'feed' && $user) {
+            if ($tab == 'feed' && $user) {
                 $post = $post->whereHas('user', function($q) use ($user) {
                     $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
                         $q->where('user_id',  $user->id);
@@ -109,7 +110,7 @@ class PostController extends Controller
     public function singlePost($slug)
     {
         $post = Post::where('slug', $slug);
-        $singlePost = fractal($post->first(), $this->singlePostTransformers);
+        $singlePost = fractal($post->firstOrFail(), $this->singlePostTransformers);
         return response()->json([
             'success' => true,
             'data' => $singlePost
