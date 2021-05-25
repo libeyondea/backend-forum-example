@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\PostTag;
 use App\Models\FollowTag;
+use Illuminate\Support\Facades\DB;
 use App\Transformers\ListTag\ListTagTransformers;
 use App\Transformers\SingleTag\SingleTagTransformers;
 

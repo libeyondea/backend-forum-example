@@ -312,7 +312,7 @@ CREATE TABLE `post` (
   `title` varchar(666) NOT NULL,
   `slug` varchar(166) NOT NULL,
   `excerpt` varchar(666) DEFAULT NULL,
-  `image` text DEFAULT NULL,
+  `image` varchar(666) DEFAULT NULL,
   `content` text NOT NULL,
   `published` tinyint(1) UNSIGNED NOT NULL,
   `published_at` datetime DEFAULT NULL,
@@ -325,7 +325,7 @@ CREATE TABLE `post` (
 --
 
 INSERT INTO `post` (`id`, `category_id`, `user_id`, `parent_id`, `title`, `slug`, `excerpt`, `image`, `content`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, 'Hello World 1', 'hello-world-1', 'Hello World 1 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 1 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-12-17 01:31:21', '2021-05-03 09:33:49'),
+(1, 1, 1, NULL, 'Forum examples next react', 'forum-examples-next-react', 'Forum examples next react', '1621334140.png', '', 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
 (2, 1, 1, NULL, 'Hello World 2', 'hello-world-2', 'Hello World 2 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 2 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-12-14 20:56:22', '2020-12-14 22:04:01'),
 (3, 1, 1, NULL, 'Hello World 3', 'hello-world-3', 'Hello World 3 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 3 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:43'),
 (4, 1, 1, NULL, 'Hello World 4', 'hello-world-4', 'Hello World 4 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 4 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 18:59:46'),

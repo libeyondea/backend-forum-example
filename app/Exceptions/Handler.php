@@ -142,6 +142,4 @@ class Handler extends ExceptionHandler
 
         return response()->json($response, $statusCode);
     }
-
-
 }
