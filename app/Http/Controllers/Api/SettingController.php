@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 use App\Models\User;
 use App\Transformers\EditProfile\EditProfileTransformers;
 
@@ -57,7 +58,7 @@ class SettingController extends Controller
             ], 200);
         }
 
-        $user = User::where('id', $user->id)->first();
+        $user = User::where('id', $user->id)->firstOrFail();
         $user->first_name = $request['first_name'];
         $user->last_name = $request['last_name'];
         $user->user_name = $request['user_name'];
@@ -67,9 +68,12 @@ class SettingController extends Controller
         $user->gender = $request['gender'];
 
         if($request->hasfile('avatar')) {
-            $avatarName = time().'.'.$request->file('avatar')->extension();
+            $oldAvatar = public_path('images/' . $user->avatar);
+            if (File::exists($oldAvatar)) {
+                File::delete($oldAvatar);
+            }
+            $avatarName = time() . '.' . $request->file('avatar')->extension();
             $request->file('avatar')->move(public_path('images'), $avatarName);
-
             $user->avatar = $avatarName;
         }
 

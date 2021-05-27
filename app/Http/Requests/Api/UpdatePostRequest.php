@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Support\Str;
 
-class CreatePostRequest extends ApiRequest
+class UpdatePostRequest extends ApiRequest
 {
 
     /**

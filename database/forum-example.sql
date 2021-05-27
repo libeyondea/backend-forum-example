@@ -325,7 +325,7 @@ CREATE TABLE `post` (
 --
 
 INSERT INTO `post` (`id`, `category_id`, `user_id`, `parent_id`, `title`, `slug`, `excerpt`, `image`, `content`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, 'Forum examples next react', 'forum-examples-next-react', 'Forum examples next react', '1621334140.png', '', 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
+(1, 1, 1, NULL, 'Forum example next and laravel rest api ', 'forum-example-next-and-laravel-rest-api', 'The sample app is a social blogging site, forum site, ... (i.e. a clone of dev.to or medium.com). We mainly use Next.js / SWR and some other support libraries.', '1621334140.png', '', 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
 (2, 1, 1, NULL, 'Hello World 2', 'hello-world-2', 'Hello World 2 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 2 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-12-14 20:56:22', '2020-12-14 22:04:01'),
 (3, 1, 1, NULL, 'Hello World 3', 'hello-world-3', 'Hello World 3 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 3 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:43'),
 (4, 1, 1, NULL, 'Hello World 4', 'hello-world-4', 'Hello World 4 is the best', '1621334140.png', '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 4 is the best</strong></span></p>', 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 18:59:46'),
@@ -476,7 +476,10 @@ INSERT INTO `post_tag` (`id`, `post_id`, `tag_id`, `created_at`, `updated_at`) V
 (63, 63, 9, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
 (64, 64, 10, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
 (65, 65, 11, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
-(66, 66, 12, '2021-04-21 11:14:02', '2021-04-21 11:14:02');
+(66, 66, 12, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
+(67, 1, 4, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
+(68, 1, 6, '2021-04-21 11:14:02', '2021-04-21 11:14:02'),
+(69, 1, 23, '2021-04-21 11:14:02', '2021-04-21 11:14:02');
 
 -- --------------------------------------------------------
 
@@ -873,7 +876,7 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT for table `post_tag`
 --
 ALTER TABLE `post_tag`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `role`

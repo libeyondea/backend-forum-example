@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::put('settings/customization', [SettingController::class, 'updateCustomization']);
     //
     Route::post('posts', [PostController::class, 'createPost']);
-    Route::put('posts/{slug}', [PostController::class, 'updatePost']);
+    Route::post('posts/{slug}', [PostController::class, 'updatePost']);
     Route::delete('posts/{slug}', [PostController::class, 'deletePost']);
     Route::get('posts/{slug}/edit', [PostController::class, 'editPost']);
     //

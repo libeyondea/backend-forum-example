@@ -12,9 +12,11 @@ use App\Models\PostTag;
 use App\Models\Follow;
 use App\Models\User;
 use App\Models\Tag;
+use Illuminate\Support\Facades\File;
 use App\Transformers\ListPost\ListPostTransformers;
 use App\Transformers\SinglePost\SinglePostTransformers;
 use App\Http\Requests\Api\CreatePostRequest;
+use App\Http\Requests\Api\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -137,52 +139,6 @@ class PostController extends Controller
 
     public function createPost(CreatePostRequest $request)
     {
-        /* $requestTags = json_decode($request->tags, true);
-        $rules = [
-            'slug' => 'unique:post',
-            'title' => 'required',
-            'content' => 'required',
-            'category_id' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5000',
-            'tags' => 'required|array|min:1|max:4',
-            'tags.*.title' => 'required|string'
-        ];
-        $messages = [
-            'slug.unique' => 'Slug already exists',
-            'title.required' => 'Title is required',
-            'content.required' => 'Content is required',
-            'category_id.required' => 'Category_id is required',
-            'image.image' => 'Image must be an image file',
-            'image.mimes' => 'Image file must be .png .jpg .jpeg .gif',
-            'image.max' => 'Maximum image size to upload is 5000kb',
-            'tags.required' => 'Tag is required',
-            'tags.array' => 'Tag must be an array',
-            'tags.min' => 'Tag must have an item',
-            'tags.max' => 'Add up to 4 tags'
-        ];
-        $payload = [
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4)),
-            'content' => $request->content,
-            'image' => $request->image,
-            'tags' => $requestTags,
-        ];
-        $validator = Validator::make($payload, $rules, $messages);
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => [
-                    'type' => '',
-                    'title' => 'Your request parameters did not validate',
-                    'status' => 200,
-                    'invalid_params' => $validator->errors(),
-                    'detail' => 'Your request parameters did not validate',
-                    'instance' => ''
-                ]
-            ], 200);
-        } */
-
         if($request->hasfile('image')) {
             $imageName = time().'.'.$request->file('image')->extension();
             $request->file('image')->move(public_path('images'), $imageName);
@@ -204,7 +160,7 @@ class PostController extends Controller
         $lastIdPost = $createPost->id;
 
         foreach ($request->tags as $key => $tags) {
-            $convertTitleToSlug = Str::slug($tags['title'], '-');
+            $convertTitleToSlug = Str::slug($tags['slug'], '-');
             $checkTag = Tag::where('slug', $convertTitleToSlug)->first();
             if (!$checkTag) {
                 $newTag = new Tag;
@@ -230,6 +186,78 @@ class PostController extends Controller
         return response()->json([
             'success' => true,
             'data' => $singlePost
+        ], 200);
+    }
+
+    public function updatePost(UpdatePostRequest $request, $slug)
+    {
+        $updatePost = Post::where('slug', $slug)->where('user_id', auth()->user()->id)->firstOrFail();
+        $updatePost->category_id = $request->category_id;
+        $updatePost->user_id = auth()->user()->id;
+        $updatePost->title = $request->title;
+        $updatePost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
+        $updatePost->excerpt = $request->excerpt;
+        $updatePost->content = $request->content;
+        $updatePost->published = '1';
+        $updatePost->published_at = Carbon::now()->toDateTimeString();
+
+        if($request->hasfile('image')) {
+            $oldImage = public_path('images/' . $updatePost->image);
+            if (File::exists($oldImage)) {
+                File::delete($oldImage);
+            }
+            $imageName = time().'.'.$request->file('image')->extension();
+            $request->file('image')->move(public_path('images'), $imageName);
+
+            $updatePost->image = $imageName;
+        }
+
+        $updatePost->save();
+
+        $lastIdPost = $updatePost->id;
+
+        $deletePostTag = PostTag::where('post_id', $lastIdPost);
+        if ($deletePostTag->get()->count() > 0) {
+            $deletePostTag->delete();
+        }
+
+        foreach ($request->tags as $key => $tags) {
+            $convertTitleToSlug = Str::slug($tags['slug'], '-');
+            $checkTag = Tag::where('slug', $convertTitleToSlug)->first();
+            if (!$checkTag) {
+                $newTag = new Tag;
+                $newTag->title = $convertTitleToSlug;
+                $newTag->slug = $convertTitleToSlug;
+                $newTag->content = $convertTitleToSlug;
+                $newTag->save();
+                $tagId = $newTag->id;
+            } else {
+                $tagId = Tag::where('slug', $convertTitleToSlug)->first()->id;
+            }
+            $checkPostTag = PostTag::where('post_id', $lastIdPost)->where('tag_id', $tagId)->first();
+            if (!$checkPostTag) {
+                $postTag = new PostTag;
+                $postTag->post_id = $lastIdPost;
+                $postTag->tag_id = $tagId;
+                $postTag->save();
+            }
+        }
+
+        $post = Post::where('id', $lastIdPost);
+        $singlePost = fractal($post->firstOrFail(), $this->singlePostTransformers);
+        return response()->json([
+            'success' => true,
+            'data' => $singlePost
+        ], 200);
+    }
+
+    public function editPost($slug)
+    {
+        $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id);
+        $editPost = fractal($post->firstOrFail(), new SinglePostTransformers);
+        return response()->json([
+            'success' => true,
+            'data' => $editPost
         ], 200);
     }
 
