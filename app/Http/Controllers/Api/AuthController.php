@@ -401,4 +401,46 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+    // FB User Deletion
+    public function facebookUserDeletion(Request $request)
+    {
+        $data = $this->parseFacebookSignedRequest($request->signed_request);
+        $user_id = $data['user_id'];
+
+        $deleteUser = User::where('facebook_id', $user_id)->firstOrFail();
+        $deleteUser->delete();
+
+        $status_url = 'https://www.de4thzone.com/deletion?id=' . $deleteUser->id; // URL to track the deletion
+        $confirmation_code = $deleteUser->id; // unique code for the deletion request
+
+        return response()->json([
+            'url' => $status_url,
+            'confirmation_code' => $confirmation_code
+        ], 200);
+    }
+
+    public function parseFacebookSignedRequest($signed_request)
+    {
+        list($encoded_sig, $payload) = explode('.', $signed_request, 2);
+
+        $secret = "39a2d3ae0e11b9667a457bc19416cc3d"; // Use your app secret here
+
+        // decode the data
+        $sig = $this->base64_url_decode($encoded_sig);
+        $data = json_decode($this->base64_url_decode($payload), true);
+
+        // confirm the signature
+        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        if ($sig !== $expected_sig) {
+            error_log('Bad Signed JSON signature!');
+            return null;
+        }
+
+        return $data;
+    }
+
+    function base64_url_decode($input) {
+        return base64_decode(strtr($input, '-_', '+/'));
+    }
 }

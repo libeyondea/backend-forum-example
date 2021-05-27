@@ -37,6 +37,8 @@ Route::group(['middleware' => 'cors'], function(){
     //
     Route::get('comments', [CommentController::class, 'listComment']);
     Route::get('comments/{id}', [CommentController::class, 'singleComment']);
+    //
+    Route::post('current_user/deletion', [AuthController::class, 'facebookUserDeletion']);
 });
 
 Route::group(['middleware' => ['auth:api', 'cors']], function(){
