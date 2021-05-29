@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,9 @@ Route::group(['middleware' => 'cors'], function(){
     Route::get('comments/{id}', [CommentController::class, 'singleComment']);
     //
     Route::post('current_user/deletion', [AuthController::class, 'facebookUserDeletion']);
+    //
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+    Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 });
 
 Route::group(['middleware' => ['auth:api', 'cors']], function(){
@@ -67,6 +71,4 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::delete('comments/{id}', [CommentController::class, 'deleteComment']);
     Route::put('comments/{id}', [CommentController::class, 'updateComment']);
     Route::get('comments/{id}/edit', [CommentController::class, 'editComment']);
-    //
-    Route::post('images/upload', [AuthController::class, 'imageUpload']);
 });

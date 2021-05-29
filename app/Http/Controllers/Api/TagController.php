@@ -94,8 +94,7 @@ class TagController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' =>  'folllowed',
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Tag folllowed',
                     'status' => 400,
@@ -126,7 +125,7 @@ class TagController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Tag unFolllowed.',
                     'status' => 400,

@@ -40,7 +40,7 @@ class PostController extends Controller
         if ($tab != 'latest' && $tab != 'oldest' && $tab != 'feed') {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Not found',
                     'status' => 404,

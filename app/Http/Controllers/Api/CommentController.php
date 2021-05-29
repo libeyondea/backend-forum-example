@@ -56,7 +56,9 @@ class CommentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'error' => [
+                    'invalid_params' => $validator->errors(),
+                ]
             ], 200);
         }
         $comment = new Comment($payload);

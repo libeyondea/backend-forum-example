@@ -17,6 +17,8 @@ use App\Models\User;
 use App\Transformers\SingleUser\SingleUserTransformers;
 use GuzzleHttp\Client;
 use File;
+use App\Mail\VerifyMail;
+use Illuminate\Support\Facades\Mail;
 
 
 class AuthController extends Controller
@@ -31,45 +33,6 @@ class AuthController extends Controller
     {
         $this->singleUserTransformers = $singleUserTransformers;
         $this->client = $client;
-    }
-
-    public function imageUpload(Request $request) {
-        $rules = [
-            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-        ];
-        $messages = [
-            'image.required' => 'Image is required',
-            'image.mimes' => 'Image invalid',
-            'image.max' => 'Maximum image size to upload is 10000kb'
-        ];
-        $payload = [
-            'image' => $request->image,
-        ];
-        $validator = Validator::make($payload, $rules, $messages);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => [
-                    'type' => '',
-                    'title' => 'Your request parameters did not validate',
-                    'status' => 200,
-                    'invalid_params' => $validator->errors(),
-                    'detail' => 'Your request parameters did not validate',
-                    'instance' => ''
-                ]
-            ], 200);
-        }
-
-        if($request->hasfile('image')) {
-            $imageName = time().'.'.$request->file('image')->extension();
-            $request->file('image')->move(public_path('images'), $imageName);
-
-            return response()->json([
-                'success' => true,
-                'data' => $imageName
-            ], 200);
-        }
     }
 
     public function register(Request $request)
@@ -102,7 +65,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Your request parameters did not validate',
                     'status' => 200,
@@ -132,6 +95,9 @@ class AuthController extends Controller
         $user->avatar = $avatarName;
         $user->role_id = Role::where('slug', 'user')->first()->id;
         $user->save();
+        $user->sendEmailVerificationNotification();
+
+        //Mail::to($user->email)->send(new VerifyMail($user));
 
         return response()->json([
             'success' => true,
@@ -150,7 +116,7 @@ class AuthController extends Controller
         if(!auth()->attempt($credentials))
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Incorrect username or password.',
                     'status' => 200,
@@ -183,7 +149,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors' => $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -197,7 +163,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors' => $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -241,7 +207,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => $e->getMessage(),
                     'status' => 500,
@@ -292,7 +258,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => $e->getMessage(),
                     'status' => 500,
@@ -360,7 +326,7 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'User folllowed.',
                     'status' => 400,
@@ -391,7 +357,7 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'User unFolllowed.',
                     'status' => 400,

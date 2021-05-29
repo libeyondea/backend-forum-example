@@ -47,7 +47,7 @@ class SettingController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => [
+                'error' => [
                     'type' => '',
                     'title' => 'Your request parameters did not validate',
                     'status' => 200,

@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
         return $request->expectsJson()
                     ? response()->json([
                         'success' => false,
-                        'errors' => [
+                        'error' => [
                             'type' => '',
                             'title' => 'Unauthenticated',
                             'status' => 401,
@@ -99,28 +99,28 @@ class Handler extends ExceptionHandler
 
         switch ($statusCode) {
             case 401:
-                $response['errors']['title'] = 'Unauthenticated';
-                $response['errors']['detail'] = 'Unauthenticated';
+                $response['error']['title'] = 'Unauthenticated';
+                $response['error']['detail'] = 'Unauthenticated';
                 break;
             case 403:
-                $response['errors']['title'] = 'Forbidden';
-                $response['errors']['detail'] = 'Forbidden';
+                $response['error']['title'] = 'Forbidden';
+                $response['error']['detail'] = 'Forbidden';
                 break;
             case 404:
-                $response['errors']['title'] = 'Not Found';
-                $response['errors']['detail'] = 'Not Found';
+                $response['error']['title'] = 'Not Found';
+                $response['error']['detail'] = 'Not Found';
                 break;
             case 405:
-                $response['errors']['title'] = 'Method Not Allowed';
-                $response['errors']['detail'] = 'Method Not Allowed';
+                $response['error']['title'] = 'Method Not Allowed';
+                $response['error']['detail'] = 'Method Not Allowed';
                 break;
             case 422:
-                $response['errors']['title'] = $exception->original['message'];
-                $response['errors']['detail'] = $exception->original['errors'];
+                $response['error']['title'] = 'Unprocessable Entity';
+                $response['error']['detail'] = 'Unprocessable Entity';
                 break;
             default:
-                $response['errors']['title'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
-                $response['errors']['detail'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
+                $response['error']['title'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
+                $response['error']['detail'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
                 break;
         }
 
@@ -135,9 +135,9 @@ class Handler extends ExceptionHandler
             })->all();
         }
 
-        $response['errors']['status'] = $statusCode;
-        $response['errors']['type'] = '';
-        $response['errors']['instance'] = '';
+        $response['error']['status'] = $statusCode;
+        $response['error']['type'] = '';
+        $response['error']['instance'] = '';
         $response['success'] = false;
 
         return response()->json($response, $statusCode);
