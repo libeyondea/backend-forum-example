@@ -24,11 +24,9 @@ class EnsureEmailIsVerified
                 return response()->json([
                     'success' => false,
                     'error' => [
-                        'type' => '',
-                        'title' => 'Your email address is not verified',
+                        'message' => 'Your email address is not verified',
                         'status' => 403,
-                        'detail' => 'Your email address is not verified',
-                        'instance' => ''
+                        'code' => ''
                     ]
                 ], 403);
             } else {

@@ -39,14 +39,11 @@ class ApiRequest extends FormRequest
                 response()->json([
                     'success' => false,
                     'error' => [
-                        'type' => '',
-                        'title' => 'Your request parameters did not validate',
-                        'status' => 200,
-                        'invalid_params' => $errors,
-                        'detail' => 'Your request parameters did not validate',
-                        'instance' => ''
+                        'message' => $errors,
+                        'status' => 422,
+                        'code' => ''
                     ]
-                ], 200)
+                ], 422)
             );
         }
         parent::failedValidation($validator);

@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'gender',
         'avatar',
         'role_id',
+        'email_verified_at'
     ];
 
     /**
@@ -64,7 +65,12 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return false;
         }
+    }
 
+    public function isVerified()
+    {
+        $user = auth()->user();
+        return !!$user->hasVerifiedEmail();
     }
 
     public function sendEmailVerificationNotification()

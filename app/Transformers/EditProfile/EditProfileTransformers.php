@@ -25,6 +25,7 @@ class EditProfileTransformers extends TransformerAbstract
             'avatar' => $user->avatar,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
+            'verified' => $user->isVerified(),
         ];
     }
 

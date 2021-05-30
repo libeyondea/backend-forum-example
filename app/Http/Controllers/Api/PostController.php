@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -18,18 +17,8 @@ use App\Transformers\SinglePost\SinglePostTransformers;
 use App\Http\Requests\Api\CreatePostRequest;
 use App\Http\Requests\Api\UpdatePostRequest;
 
-class PostController extends Controller
+class PostController extends ApiController
 {
-    private $listPostTransformers;
-
-    private $singlePostTransformers;
-
-    public function __construct(ListPostTransformers $listPostTransformers, SinglePostTransformers $singlePostTransformers)
-    {
-        $this->listPostTransformers = $listPostTransformers;
-        $this->singlePostTransformers = $singlePostTransformers;
-    }
-
     public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
     {
         $user = auth('api')->user();
@@ -38,16 +27,7 @@ class PostController extends Controller
         $tab = $request->get('tab', $tab);
 
         if ($tab != 'latest' && $tab != 'oldest' && $tab != 'feed') {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'type' => '',
-                    'title' => 'Not found',
-                    'status' => 404,
-                    'detail' => 'Not found',
-                    'instance' => ''
-                ]
-            ], 404);
+            return $this->respondNotFound();
         }
 
         if ($tab == 'latest') {
@@ -116,25 +96,15 @@ class PostController extends Controller
         }
 
         $postsCount = $post->get()->count();
-        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), $this->listPostTransformers);
-
-        return response()->json([
-            'success' => true,
-            'data' => $listPost,
-            'meta' => [
-                'posts_count' => $postsCount
-            ]
-        ], 200);
+        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), new ListPostTransformers);
+        return $this->respondSuccessWithPagination($listPost, $postsCount);
     }
 
     public function singlePost($slug)
     {
         $post = Post::where('slug', $slug);
-        $singlePost = fractal($post->firstOrFail(), $this->singlePostTransformers);
-        return response()->json([
-            'success' => true,
-            'data' => $singlePost
-        ], 200);
+        $singlePost = fractal($post->firstOrFail(), new SinglePostTransformers);
+        return $this->respondSuccess($singlePost);
     }
 
     public function createPost(CreatePostRequest $request)
@@ -182,11 +152,8 @@ class PostController extends Controller
         }
 
         $post = Post::where('id', $lastIdPost);
-        $singlePost = fractal($post->firstOrFail(), $this->singlePostTransformers);
-        return response()->json([
-            'success' => true,
-            'data' => $singlePost
-        ], 200);
+        $singlePost = fractal($post->firstOrFail(), new SinglePostTransformers);
+        return $this->respondSuccess($singlePost);
     }
 
     public function updatePost(UpdatePostRequest $request, $slug)
@@ -244,30 +211,21 @@ class PostController extends Controller
         }
 
         $post = Post::where('id', $lastIdPost);
-        $singlePost = fractal($post->firstOrFail(), $this->singlePostTransformers);
-        return response()->json([
-            'success' => true,
-            'data' => $singlePost
-        ], 200);
+        $singlePost = fractal($post->firstOrFail(), new SinglePostTransformers);
+        return $this->respondSuccess($singlePost);
     }
 
     public function editPost($slug)
     {
         $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id);
         $editPost = fractal($post->firstOrFail(), new SinglePostTransformers);
-        return response()->json([
-            'success' => true,
-            'data' => $editPost
-        ], 200);
+        return $this->respondSuccess($editPost);
     }
 
     public function deletePost($slug)
     {
         $deletePost = Post::where('slug', $slug)->where('user_id', auth()->user()->id)->firstOrFail();
         $deletePost->delete();
-        return response()->json([
-            'success' => true,
-            'data' => $deletePost
-        ], 200);
+        return $this->respondSuccess($deletePost);
     }
 }

@@ -7,11 +7,6 @@ use Illuminate\Support\Str;
 class CreatePostRequest extends ApiRequest
 {
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -25,11 +20,6 @@ class CreatePostRequest extends ApiRequest
         ];
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
@@ -47,11 +37,6 @@ class CreatePostRequest extends ApiRequest
         ];
     }
 
-    /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     */
     protected function prepareForValidation()
     {
         $this->merge([
@@ -59,4 +44,4 @@ class CreatePostRequest extends ApiRequest
             'slug' => Str::slug($this->title, '-') . '-' . Str::lower(Str::random(4))
         ]);
     }
-    }
+}
