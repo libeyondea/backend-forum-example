@@ -11,6 +11,7 @@ use App\Models\PostTag;
 use App\Models\Follow;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\FavoritePost;
 use Illuminate\Support\Facades\File;
 use App\Transformers\ListPost\ListPostTransformers;
 use App\Transformers\SinglePost\SinglePostTransformers;
@@ -81,20 +82,34 @@ class PostController extends ApiController
                 $q->where('user_name', $request->favorited);
             });
         } else {
-            $post = new Post;
+            $post = Post::where('ghim', 0);
             if ($tab == 'feed' && $user) {
-                $post = $post->whereHas('user', function($q) use ($user) {
-                    $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
-                        $q->where('user_id',  $user->id);
-                    })->get());
-                })->orWhereHas('tag', function($q) use ($user) {
-                    $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
-                        $q->where('user_id',  $user->id);
-                    })->get());
+                $post = $post->where(function($subQuery) use ($user)
+                {
+                    $subQuery->whereHas('user', function($q) use ($user) {
+                        $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                            $q->where('user_id',  $user->id);
+                        })->get());
+                    })->orWhereHas('tag', function($q) use ($user) {
+                        $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                            $q->where('user_id',  $user->id);
+                        })->get());
+                    });
                 });
             }
         }
 
+        $postsCount = $post->get()->count();
+        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), new ListPostTransformers);
+        return $this->respondSuccessWithPagination($listPost, $postsCount);
+    }
+
+    public function listPostGhim(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
+    {
+        $limit = $request->get('limit', $limit);
+        $offset = $request->get('offset', $offset);
+
+        $post = Post::where('ghim', 1);
         $postsCount = $post->get()->count();
         $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), new ListPostTransformers);
         return $this->respondSuccessWithPagination($listPost, $postsCount);
@@ -124,6 +139,7 @@ class PostController extends ApiController
         $createPost->excerpt = $request->excerpt;
         $createPost->content = $request->content;
         $createPost->image = $imageName;
+        $createPost->ghim = '0';
         $createPost->published = '1';
         $createPost->published_at = Carbon::now()->toDateTimeString();
         $createPost->save();
@@ -227,5 +243,46 @@ class PostController extends ApiController
         $deletePost = Post::where('slug', $slug)->where('user_id', auth()->user()->id)->firstOrFail();
         $deletePost->delete();
         return $this->respondSuccess($deletePost);
+    }
+
+    public function favoritePost(Request $request)
+    {
+        $user = auth()->user();
+
+        $postFavorite = Post::where('slug', $request->slug)->firstOrFail();
+
+        $favoriteCheck = FavoritePost::where('user_id', $user->id)->where('post_id', $postFavorite->id)->first();
+
+        if(!$favoriteCheck) {
+            $favorite = new FavoritePost;
+            $favorite->user_id = $user->id;
+            $favorite->post_id = $postFavorite->id;
+            $favorite->save();
+            return $this->respondSuccess([
+                'id' => $favorite->post->id,
+                'slug' => $favorite->post->slug
+            ]);
+        } else {
+            return $this->respondUnprocessableEntity('Post favorited');
+        }
+    }
+
+    public function unfavoritePost(Request $request)
+    {
+        $user = auth()->user();
+
+        $postFavorite = Post::where('slug', $request->slug)->firstOrFail();
+
+        $favoriteCheck = FavoritePost::where('user_id', $user->id)->where('post_id', $postFavorite->id)->first();
+
+        if(!!$favoriteCheck) {
+            $favoriteCheck->delete();
+            return $this->respondSuccess([
+                'id' => $favoriteCheck->post->id,
+                'slug' => $favoriteCheck->post->slug
+            ]);
+        } else {
+            return $this->respondUnprocessableEntity('Post does not exist or not in the favoritelist');
+        }
     }
 }

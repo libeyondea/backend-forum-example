@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FavoritePost extends Model
 {
     protected $table = 'favorite_post';
-    protected $primaryKey = ['id'];
+    protected $primaryKey = 'id';
 
     public function User()
     {
@@ -18,6 +18,4 @@ class FavoritePost extends Model
     {
     	return $this->belongsTo('App\Models\Post', 'post_id', 'id');
     }
-
-
 }

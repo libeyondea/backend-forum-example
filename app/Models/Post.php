@@ -9,6 +9,16 @@ class Post extends Model
     protected $table = 'post';
     protected $primaryKey = 'id';
 
+    public function isFavorited()
+    {
+        $user = auth('api')->user();
+        if ($user) {
+            return !!$this->favoritepost()->where('user_id', $user->id)->count();
+        } else {
+            return false;
+        }
+    }
+
     public function User()
     {
     	return $this->belongsTo('App\Models\User', 'user_id', 'id');

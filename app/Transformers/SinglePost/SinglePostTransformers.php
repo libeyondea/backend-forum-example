@@ -25,7 +25,9 @@ class SinglePostTransformers extends TransformerAbstract
             'published_at' => $post->published_at,
             'created_at' => $post->created_at,
             'updated_at' => $post->updated_at,
-            'total_comments' =>$post->comment->count()
+            'total_comments' =>$post->comment->count(),
+            'total_favorited' =>$post->favoritepost->count(),
+            'favorited' => $post->isFavorited()
         ];
     }
 
