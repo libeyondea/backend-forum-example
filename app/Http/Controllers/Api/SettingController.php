@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Transformers\EditProfile\EditProfileTransformers;
 use App\Http\Requests\Api\UpdateProfileRequest;
@@ -23,12 +24,13 @@ class SettingController extends ApiController
         $user->gender = $request['gender'];
 
         if($request->hasfile('avatar')) {
-            $oldAvatar = public_path('images/' . $user->avatar);
-            if (File::exists($oldAvatar)) {
-                File::delete($oldAvatar);
+            $oldAvatar = 'images/' . $user->avatar;
+            if (Storage::disk('s3')->exists($oldAvatar)) {
+                Storage::disk('s3')->delete($oldAvatar);
             }
             $avatarName = time() . '.' . $request->file('avatar')->extension();
-            $request->file('avatar')->move(public_path('images'), $avatarName);
+            Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($request->file('avatar')), 'public');
+
             $user->avatar = $avatarName;
         }
 

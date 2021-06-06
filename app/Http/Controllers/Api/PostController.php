@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Post;
 use App\Models\PostTag;
@@ -125,10 +126,12 @@ class PostController extends ApiController
     public function createPost(CreatePostRequest $request)
     {
         if($request->hasfile('image')) {
-            $imageName = time().'.'.$request->file('image')->extension();
-            $request->file('image')->move(public_path('images'), $imageName);
+
+            $imageName = time() . '.' .$request->file('image')->extension();
+            Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
+
         } else {
-            $imageName = '';
+            $imageName = null;
         }
 
         $createPost = new Post;
@@ -185,12 +188,12 @@ class PostController extends ApiController
         $updatePost->published_at = Carbon::now()->toDateTimeString();
 
         if($request->hasfile('image')) {
-            $oldImage = public_path('images/' . $updatePost->image);
-            if (File::exists($oldImage)) {
-                File::delete($oldImage);
+            $oldImage = 'images/' . $updatePost->image;
+            if (Storage::disk('s3')->exists($oldImage)) {
+                Storage::disk('s3')->delete($oldImage);
             }
-            $imageName = time().'.'.$request->file('image')->extension();
-            $request->file('image')->move(public_path('images'), $imageName);
+            $imageName = time() . '.' . $request->file('image')->extension();
+            Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
 
             $updatePost->image = $imageName;
         }

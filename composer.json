@@ -15,6 +15,7 @@
         "laravel/framework": "^8.12",
         "laravel/passport": "^10.1",
         "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "~1.0",
         "league/fractal": "^0.19.2",
         "spatie/laravel-fractal": "^5.8"
     },

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use Exception;
@@ -33,8 +34,10 @@ class AuthController extends ApiController
     public function register(RegisterRequest $request)
     {
         if($request->hasfile('avatar')) {
-            $avatarName = time().'.'.$request->file('avatar')->extension();
-            $request->file('avatar')->move(public_path('images'), $avatarName);
+
+            $avatarName = time() . '.' . $request->file('avatar')->extension();
+            Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($request->file('avatar')), 'public');
+
         } else {
             $avatarName = 'default_avatar.png';
         }
@@ -111,9 +114,10 @@ class AuthController extends ApiController
         try {
             $user = User::where('facebook_id', $profile['id'])->first();
             if (!$user) {
-                $avatarContent = file_get_contents($profile['picture']['data']['url']);
+
+                $avatarContent = $profile['picture']['data']['url'];
                 $avatarName = time() . '.jpg';
-                File::put(public_path() . '/images/' . $avatarName, $avatarContent);
+                Storage::disk('s3')->put('images', file_get_contents($avatarContent), 'public');
 
                 $user = User::create([
                     'facebook_id' => $profile['id'],
@@ -150,9 +154,9 @@ class AuthController extends ApiController
             $user = User::where('google_id', $profile['sub'])->first();
             if (!$user) {
 
-                $avatarContent = file_get_contents($profile['picture']);
+                $avatarContent = $profile['picture'];
                 $avatarName = time() . '.jpg';
-                File::put(public_path() . '/images/' . $avatarName, $avatarContent);
+                Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
 
                 $user = User::create([
                     'google_id' => $profile['sub'],
