@@ -117,7 +117,7 @@ class AuthController extends ApiController
 
                 $avatarContent = $profile['picture']['data']['url'];
                 $avatarName = time() . '.jpg';
-                Storage::disk('s3')->put('images', file_get_contents($avatarContent), 'public');
+                Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
 
                 $user = User::create([
                     'facebook_id' => $profile['id'],
