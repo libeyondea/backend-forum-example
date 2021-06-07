@@ -119,16 +119,22 @@ class AuthController extends ApiController
                 $avatarName = time() . '.jpg';
                 Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
 
-                $user = User::create([
-                    'facebook_id' => $profile['id'],
-                    'first_name' => $profile['first_name'],
-                    'last_name' => $profile['last_name'],
-                    'email' => $profile['email'],
-                    'user_name' => 'fb_'.$profile['id'],
-                    'password' => bcrypt(Str::random(9)),
-                    'avatar' => $avatarName,
-                    'role_id' => Role::where('slug', 'user')->first()->id,
-                ]);
+                $user = new User;
+                $user->facebook_id = $profile['id'];
+                $user->first_name = $profile['first_name'];
+                $user->last_name = $profile['last_name'];
+                $user->user_name = 'fb_' . $profile['id'];
+                $user->password = bcrypt(Str::random(9));
+                $user->avatar = $avatarName;
+                $user->role_id = Role::where('slug', 'user')->first()->id;
+
+                if (!User::where('email', $profile['email'])->first()) {
+                    $user->email = $profile['email'];
+                    $user->email_verified_at = Carbon::now();
+                } else {
+                    $user->email = '';
+                }
+
             }
 
             $tokenResult = $user->createToken('Personal Access Client');
@@ -158,16 +164,23 @@ class AuthController extends ApiController
                 $avatarName = time() . '.jpg';
                 Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
 
-                $user = User::create([
-                    'google_id' => $profile['sub'],
-                    'first_name' => $profile['given_name'],
-                    'last_name' => $profile['family_name'],
-                    'email' => $profile['email'],
-                    'user_name' => 'gg_'.$profile['sub'],
-                    'password' => bcrypt(Str::random(9)),
-                    'avatar' => $avatarName,
-                    'role_id' => Role::where('slug', 'user')->first()->id,
-                ]);
+                $user = new User;
+                $user->google_id = $profile['sub'];
+                $user->first_name = $profile['given_name'];
+                $user->last_name = $profile['family_name'];
+                $user->user_name = 'gg_' . $profile['sub'];
+                $user->password = bcrypt(Str::random(9));
+                $user->avatar = $avatarName;
+                $user->role_id = Role::where('slug', 'user')->first()->id;
+
+                if (!User::where('email', $profile['email'])->first()) {
+                    $user->email = $profile['email'];
+                    $user->email_verified_at = Carbon::now();
+                } else {
+                    $user->email = '';
+                }
+
+                $user->save();
             }
 
             $tokenResult = $user->createToken('Personal Access Client');

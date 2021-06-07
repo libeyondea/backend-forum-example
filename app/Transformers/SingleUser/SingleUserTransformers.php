@@ -22,6 +22,11 @@ class SingleUserTransformers extends TransformerAbstract
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
             'total_posts' => $user->post->count(),
+            'total_favorited' => $user->postfavorite->count(),
+            'total_comments' => $user->comment->count(),
+            'total_tags_followed' => $user->followTag->count(),
+            'total_following_users' => $user->followuser->count(),
+            'total_user_followers' => $user->following->count(),
             'following' => $user->isFollowing()
         ];
     }
