@@ -16,7 +16,10 @@ class UserTransformers extends TransformerAbstract
         return [
             'id' => $user->id,
             'user_name' => $user->user_name,
-            'avatar' => $user->avatar
+            'avatar' => $user->avatar,
+            'following' => $user->isFollowing(),
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at
         ];
     }
 
