@@ -34,7 +34,7 @@ CREATE TABLE `category` (
   `content` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `category`
@@ -64,7 +64,7 @@ CREATE TABLE `comment` (
   `published_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `comment`
@@ -87,7 +87,7 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext NOT NULL,
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE `favorite_post` (
   `post_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE `follow_tag` (
   `tag_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -129,7 +129,7 @@ CREATE TABLE `follow_user` (
   `following_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -141,7 +141,7 @@ CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -173,7 +173,7 @@ CREATE TABLE `oauth_access_tokens` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `expires_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -188,7 +188,7 @@ CREATE TABLE `oauth_auth_codes` (
   `scopes` text DEFAULT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -208,7 +208,7 @@ CREATE TABLE `oauth_clients` (
   `revoked` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `oauth_clients`
@@ -229,7 +229,7 @@ CREATE TABLE `oauth_personal_access_clients` (
   `client_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `oauth_personal_access_clients`
@@ -249,7 +249,7 @@ CREATE TABLE `oauth_refresh_tokens` (
   `access_token_id` varchar(100) NOT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -261,7 +261,7 @@ CREATE TABLE `password_resets` (
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -277,7 +277,7 @@ CREATE TABLE `permission` (
   `active` tinyint(1) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permission`
@@ -309,7 +309,6 @@ CREATE TABLE `post` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `category_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
   `title` varchar(666) NOT NULL,
   `slug` varchar(166) NOT NULL,
   `excerpt` varchar(666) DEFAULT NULL,
@@ -320,79 +319,79 @@ CREATE TABLE `post` (
   `published_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `category_id`, `user_id`, `parent_id`, `title`, `slug`, `excerpt`, `image`, `content`, `ghim`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, 'Forum example next and laravel rest api ', 'forum-example-next-and-laravel-rest-api', 'The sample app is a social blogging site, forum site, ... (i.e. a clone of dev.to or medium.com). We mainly use Next.js / SWR and some other support libraries.', '1621334140.png', '', 1, 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
-(2, 1, 1, NULL, 'Hello World 2', 'hello-world-2', 'Hello World 2 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 2 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-12-14 20:56:22', '2020-12-14 22:04:01'),
-(3, 1, 1, NULL, 'Hello World 3', 'hello-world-3', 'Hello World 3 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 3 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:43'),
-(4, 1, 1, NULL, 'Hello World 4', 'hello-world-4', 'Hello World 4 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 4 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 18:59:46'),
-(5, 1, 1, NULL, 'Hello World 5', 'hello-world-5', 'Hello World 5 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 5 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:48'),
-(6, 1, 1, NULL, 'Hello World 6', 'hello-world-6', 'Hello World 6 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 6 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-31 21:56:24', '2020-12-14 18:59:49'),
-(7, 1, 1, NULL, 'Hello World 7', 'hello-world-7', 'Hello World 7 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 7 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 18:59:53'),
-(8, 1, 1, NULL, 'Hello World 8', 'hello-world-8', 'Hello World 8 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 8 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:54'),
-(9, 1, 1, NULL, 'Hello World 9', 'hello-world-9', 'Hello World 9 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 9 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:57'),
-(10, 1, 1, NULL, 'Hello World 10', 'hello-world-10', 'Hello World 10 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 10 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:59'),
-(11, 1, 1, NULL, 'Hello World 11', 'hello-world-11', 'Hello World 11 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 11 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:01'),
-(12, 1, 1, NULL, 'Hello World 12', 'hello-world-12', 'Hello World 12 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 12 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:03'),
-(13, 1, 1, NULL, 'Hello World 13', 'hello-world-13', 'Hello World 13 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 13 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:04'),
-(14, 1, 1, NULL, 'Hello World 14', 'hello-world-14', 'Hello World 14 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 14 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:07'),
-(15, 1, 1, NULL, 'Hello World 15', 'hello-world-15', 'Hello World 15 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 15 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:10'),
-(16, 1, 1, NULL, 'Hello World 16', 'hello-world-16', 'Hello World 16 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 16 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:13'),
-(17, 1, 1, NULL, 'Hello World 17', 'hello-world-17', 'Hello World 17 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 17 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:16'),
-(18, 1, 1, NULL, 'Hello World 18', 'hello-world-18', 'Hello World 18 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 18 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:19'),
-(19, 1, 1, NULL, 'Hello World 19', 'hello-world-19', 'Hello World 19 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 19 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:23'),
-(20, 1, 1, NULL, 'Hello World 20', 'hello-world-20', 'Hello World 20 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 20 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:00:28'),
-(21, 2, 1, NULL, 'Hello World 21', 'hello-world-21', 'Hello World 21 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 21 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:30'),
-(22, 2, 1, NULL, 'Hello World 22', 'hello-world-22', 'Hello World 22 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 22 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:33'),
-(23, 2, 1, NULL, 'Hello World 23', 'hello-world-23', 'Hello World 23 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 23 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:34'),
-(24, 2, 1, NULL, 'Hello World 24', 'hello-world-24', 'Hello World 24 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 24 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:35'),
-(25, 2, 1, NULL, 'Hello World 25', 'hello-world-25', 'Hello World 25 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 25 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:40'),
-(26, 2, 1, NULL, 'Hello World 26', 'hello-world-26', 'Hello World 26 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 26 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:57'),
-(27, 2, 1, NULL, 'Hello World 27', 'hello-world-27', 'Hello World 27 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 27 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:58'),
-(28, 2, 1, NULL, 'Hello World 28', 'hello-world-28', 'Hello World 28 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 28 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:00'),
-(29, 2, 1, NULL, 'Hello World 29', 'hello-world-29', 'Hello World 29 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 29 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:03'),
-(30, 2, 1, NULL, 'Hello World 30', 'hello-world-30', 'Hello World 30 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 30 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:07'),
-(31, 2, 1, NULL, 'Hello World 31', 'hello-world-31', 'Hello World 31 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 31 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:08'),
-(32, 2, 1, NULL, 'Hello World 32', 'hello-world-32', 'Hello World 32 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 32 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:10'),
-(33, 2, 1, NULL, 'Hello World 33', 'hello-world-33', 'Hello World 33 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 33 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:02:13'),
-(34, 2, 1, NULL, 'Hello World 34', 'hello-world-34', 'Hello World 34 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 34 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:16'),
-(35, 2, 1, NULL, 'Hello World 35', 'hello-world-35', 'Hello World 35 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 35 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:19'),
-(36, 2, 1, NULL, 'Hello World 36', 'hello-world-36', 'Hello World 36 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 36 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:21'),
-(37, 2, 1, NULL, 'Hello World 37', 'hello-world-37', 'Hello World 37 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 37 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:02:22'),
-(38, 2, 1, NULL, 'Hello World 38', 'hello-world-38', 'Hello World 38 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 38 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:25'),
-(39, 2, 1, NULL, 'Hello World 39', 'hello-world-39', 'Hello World 39 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 39 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:26'),
-(40, 2, 1, NULL, 'Hello World 40', 'hello-world-40', 'Hello World 40 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 40 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:28'),
-(41, 3, 1, NULL, 'Hello World 41', 'hello-world-41', 'Hello World 41 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 41 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:02:43'),
-(42, 3, 1, NULL, 'Hello World 42', 'hello-world-42', 'Hello World 42 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 42 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:55'),
-(43, 3, 1, NULL, 'Hello World 43', 'hello-world-43', 'Hello World 43 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 43 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:51'),
-(44, 3, 1, NULL, 'Hello World 44', 'hello-world-44', 'Hello World 44 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 44 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:49'),
-(45, 3, 1, NULL, 'Hello World 45', 'hello-world-45', 'Hello World 45 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 45 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:47'),
-(46, 3, 1, NULL, 'Hello World 46', 'hello-world-46', 'Hello World 46 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 46 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:45'),
-(47, 3, 1, NULL, 'Hello World 47', 'hello-world-47', 'Hello World 47 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 47 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:44'),
-(48, 3, 1, NULL, 'Hello World 48', 'hello-world-48', 'Hello World 48 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 48 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:42'),
-(49, 3, 1, NULL, 'Hello World 49', 'hello-world-49', 'Hello World 49 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 49 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:40'),
-(50, 3, 1, NULL, 'Hello World 50', 'hello-world-50', 'Hello World 50 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 50 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:36'),
-(51, 4, 1, NULL, 'Hello World 51', 'hello-world-51', 'Hello World 51 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 51 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:37'),
-(52, 4, 1, NULL, 'Hello World 52', 'hello-world-52', 'Hello World 52 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 52 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:31'),
-(53, 4, 1, NULL, 'Hello World 53', 'hello-world-53', 'Hello World 53 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 53 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:25'),
-(54, 4, 1, NULL, 'Hello World 54', 'hello-world-54', 'Hello World 54 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 54 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:20'),
-(55, 4, 1, NULL, 'Hello World 55', 'hello-world-55', 'Hello World 55 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 55 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:17'),
-(56, 4, 1, NULL, 'Hello World 56', 'hello-world-56', 'Hello World 56 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 56 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:15'),
-(57, 4, 1, NULL, 'Hello World 57', 'hello-world-57', 'Hello World 57 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 57 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:13'),
-(58, 4, 1, NULL, 'Hello World 58', 'hello-world-58', 'Hello World 58 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 58 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:11'),
-(59, 4, 1, NULL, 'Hello World 59', 'hello-world-59', 'Hello World 59 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 59 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:10'),
-(60, 4, 1, NULL, 'Hello World 60', 'hello-world-60', 'Hello World 60 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 60 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:07'),
-(61, 4, 1, NULL, 'Hello World 61', 'hello-world-61', 'Hello World 61 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 61 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:05'),
-(62, 4, 1, NULL, 'Hello World 62', 'hello-world-62', 'Hello World 62 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 62 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:03'),
-(63, 4, 1, NULL, 'Hello World 63', 'hello-world-63', 'Hello World 63 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 63 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:01'),
-(64, 4, 1, NULL, 'Hello World 64', 'hello-world-64', 'Hello World 64 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 64 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:58'),
-(65, 4, 1, NULL, 'Hello World 65', 'hello-world-65', 'Hello World 65 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 65 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:56'),
-(66, 4, 1, NULL, 'Hello World 66', 'hello-world-66', 'Hello World 66 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 66 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:53');
+INSERT INTO `post` (`id`, `category_id`, `user_id`, `title`, `slug`, `excerpt`, `image`, `content`, `ghim`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Forum example next and laravel rest api ', 'forum-example-next-and-laravel-rest-api', 'The sample app is a social blogging site, forum site, ... (i.e. a clone of dev.to or medium.com). We mainly use Next.js / SWR and some other support libraries.', '1621334140.png', '', 1, 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
+(2, 1, 1, 'Hello World 2', 'hello-world-2', 'Hello World 2 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 2 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-12-14 20:56:22', '2020-12-14 22:04:01'),
+(3, 1, 1, 'Hello World 3', 'hello-world-3', 'Hello World 3 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 3 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:43'),
+(4, 1, 1, 'Hello World 4', 'hello-world-4', 'Hello World 4 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 4 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 18:59:46'),
+(5, 1, 1, 'Hello World 5', 'hello-world-5', 'Hello World 5 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 5 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:48'),
+(6, 1, 1, 'Hello World 6', 'hello-world-6', 'Hello World 6 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 6 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-31 21:56:24', '2020-12-14 18:59:49'),
+(7, 1, 1, 'Hello World 7', 'hello-world-7', 'Hello World 7 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 7 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 18:59:53'),
+(8, 1, 1, 'Hello World 8', 'hello-world-8', 'Hello World 8 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 8 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:54'),
+(9, 1, 1, 'Hello World 9', 'hello-world-9', 'Hello World 9 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 9 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:57'),
+(10, 1, 1, 'Hello World 10', 'hello-world-10', 'Hello World 10 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 10 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:59'),
+(11, 1, 1, 'Hello World 11', 'hello-world-11', 'Hello World 11 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 11 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:01'),
+(12, 1, 1, 'Hello World 12', 'hello-world-12', 'Hello World 12 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 12 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:03'),
+(13, 1, 1, 'Hello World 13', 'hello-world-13', 'Hello World 13 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 13 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:04'),
+(14, 1, 1, 'Hello World 14', 'hello-world-14', 'Hello World 14 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 14 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:07'),
+(15, 1, 1, 'Hello World 15', 'hello-world-15', 'Hello World 15 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 15 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:10'),
+(16, 1, 1, 'Hello World 16', 'hello-world-16', 'Hello World 16 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 16 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:13'),
+(17, 1, 1, 'Hello World 17', 'hello-world-17', 'Hello World 17 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 17 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:16'),
+(18, 1, 1, 'Hello World 18', 'hello-world-18', 'Hello World 18 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 18 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:19'),
+(19, 1, 1, 'Hello World 19', 'hello-world-19', 'Hello World 19 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 19 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:23'),
+(20, 1, 1, 'Hello World 20', 'hello-world-20', 'Hello World 20 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 20 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:00:28'),
+(21, 2, 1, 'Hello World 21', 'hello-world-21', 'Hello World 21 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 21 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:00:30'),
+(22, 2, 1, 'Hello World 22', 'hello-world-22', 'Hello World 22 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 22 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:33'),
+(23, 2, 1, 'Hello World 23', 'hello-world-23', 'Hello World 23 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 23 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:34'),
+(24, 2, 1, 'Hello World 24', 'hello-world-24', 'Hello World 24 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 24 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:35'),
+(25, 2, 1, 'Hello World 25', 'hello-world-25', 'Hello World 25 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 25 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:40'),
+(26, 2, 1, 'Hello World 26', 'hello-world-26', 'Hello World 26 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 26 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:57'),
+(27, 2, 1, 'Hello World 27', 'hello-world-27', 'Hello World 27 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 27 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:58'),
+(28, 2, 1, 'Hello World 28', 'hello-world-28', 'Hello World 28 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 28 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:00'),
+(29, 2, 1, 'Hello World 29', 'hello-world-29', 'Hello World 29 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 29 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:03'),
+(30, 2, 1, 'Hello World 30', 'hello-world-30', 'Hello World 30 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 30 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:07'),
+(31, 2, 1, 'Hello World 31', 'hello-world-31', 'Hello World 31 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 31 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:08'),
+(32, 2, 1, 'Hello World 32', 'hello-world-32', 'Hello World 32 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 32 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:10'),
+(33, 2, 1, 'Hello World 33', 'hello-world-33', 'Hello World 33 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 33 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:02:13'),
+(34, 2, 1, 'Hello World 34', 'hello-world-34', 'Hello World 34 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 34 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:16'),
+(35, 2, 1, 'Hello World 35', 'hello-world-35', 'Hello World 35 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 35 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:19'),
+(36, 2, 1, 'Hello World 36', 'hello-world-36', 'Hello World 36 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 36 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:21'),
+(37, 2, 1, 'Hello World 37', 'hello-world-37', 'Hello World 37 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 37 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:02:22'),
+(38, 2, 1, 'Hello World 38', 'hello-world-38', 'Hello World 38 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 38 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:25'),
+(39, 2, 1, 'Hello World 39', 'hello-world-39', 'Hello World 39 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 39 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:02:26'),
+(40, 2, 1, 'Hello World 40', 'hello-world-40', 'Hello World 40 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 40 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:02:28'),
+(41, 3, 1, 'Hello World 41', 'hello-world-41', 'Hello World 41 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 41 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:02:43'),
+(42, 3, 1, 'Hello World 42', 'hello-world-42', 'Hello World 42 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 42 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:55'),
+(43, 3, 1, 'Hello World 43', 'hello-world-43', 'Hello World 43 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 43 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:51'),
+(44, 3, 1, 'Hello World 44', 'hello-world-44', 'Hello World 44 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 44 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:49'),
+(45, 3, 1, 'Hello World 45', 'hello-world-45', 'Hello World 45 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 45 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:47'),
+(46, 3, 1, 'Hello World 46', 'hello-world-46', 'Hello World 46 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 46 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:45'),
+(47, 3, 1, 'Hello World 47', 'hello-world-47', 'Hello World 47 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 47 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:44'),
+(48, 3, 1, 'Hello World 48', 'hello-world-48', 'Hello World 48 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 48 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:42'),
+(49, 3, 1, 'Hello World 49', 'hello-world-49', 'Hello World 49 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 49 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:40'),
+(50, 3, 1, 'Hello World 50', 'hello-world-50', 'Hello World 50 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 50 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:36'),
+(51, 4, 1, 'Hello World 51', 'hello-world-51', 'Hello World 51 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 51 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:37'),
+(52, 4, 1, 'Hello World 52', 'hello-world-52', 'Hello World 52 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 52 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:31'),
+(53, 4, 1, 'Hello World 53', 'hello-world-53', 'Hello World 53 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 53 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:25'),
+(54, 4, 1, 'Hello World 54', 'hello-world-54', 'Hello World 54 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 54 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:20'),
+(55, 4, 1, 'Hello World 55', 'hello-world-55', 'Hello World 55 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 55 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:17'),
+(56, 4, 1, 'Hello World 56', 'hello-world-56', 'Hello World 56 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 56 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:15'),
+(57, 4, 1, 'Hello World 57', 'hello-world-57', 'Hello World 57 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 57 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:13'),
+(58, 4, 1, 'Hello World 58', 'hello-world-58', 'Hello World 58 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 58 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:11'),
+(59, 4, 1, 'Hello World 59', 'hello-world-59', 'Hello World 59 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 59 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 19:01:10'),
+(60, 4, 1, 'Hello World 60', 'hello-world-60', 'Hello World 60 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 60 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:07'),
+(61, 4, 1, 'Hello World 61', 'hello-world-61', 'Hello World 61 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 61 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:05'),
+(62, 4, 1, 'Hello World 62', 'hello-world-62', 'Hello World 62 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 62 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:01:03'),
+(63, 4, 1, 'Hello World 63', 'hello-world-63', 'Hello World 63 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 63 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:21', '2020-12-14 19:01:01'),
+(64, 4, 1, 'Hello World 64', 'hello-world-64', 'Hello World 64 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 64 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:58'),
+(65, 4, 1, 'Hello World 65', 'hello-world-65', 'Hello World 65 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 65 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:24', '2020-12-14 19:00:56'),
+(66, 4, 1, 'Hello World 66', 'hello-world-66', 'Hello World 66 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 66 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:22', '2020-12-14 19:00:53');
 
 -- --------------------------------------------------------
 
@@ -406,7 +405,7 @@ CREATE TABLE `post_tag` (
   `tag_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `post_tag`
@@ -497,7 +496,7 @@ CREATE TABLE `role` (
   `active` tinyint(1) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `role`
@@ -520,7 +519,7 @@ CREATE TABLE `role_permission` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `role_permission`
@@ -573,7 +572,7 @@ CREATE TABLE `tag` (
   `content` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tag`
@@ -627,24 +626,25 @@ CREATE TABLE `users` (
   `auth_token` varchar(6666) DEFAULT NULL,
   `phone_number` varchar(66) DEFAULT NULL,
   `address` varchar(666) DEFAULT NULL,
-  `gender` varchar(10) DEFAULT NULL,
-  `avatar` text DEFAULT NULL,
+  `gender` varchar(10) NOT NULL check(gender in ('male', 'female', 'unknown')),
+  `avatar` varchar(666) DEFAULT NULL,
+  `biography` varchar(666) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role_id`, `facebook_id`, `google_id`, `first_name`, `last_name`, `user_name`, `email`, `email_verified_at`, `password`, `remember_token`, `auth_token`, `phone_number`, `address`, `gender`, `avatar`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, NULL, 'Thuc', 'Nguyen', 'de4th-zone', 'nguyenthucofficial@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84336077131', 'HoChiMinh City, VietNam', 'male', '6666666666.jpg', '2020-10-25 14:25:10', '2021-04-21 08:58:02'),
-(2, 3, NULL, NULL, 'Thuc 2', 'Nguyen', 'nguyen-thuc', 'nguyenthuc@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84666999666', 'Mosul City, Iraq', 'female', '6666666666.jpg', '2020-10-25 14:25:10', '2021-04-21 08:59:09'),
-(3, 3, NULL, NULL, 'Thuc 3', 'Nguyen', 'thuc-jwt', 'thucjwt@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84999666999', 'Moskva, Russia', 'orther', '6666666666.jpg', '2020-10-25 14:25:10', '2021-04-21 08:59:12'),
-(4, 3, NULL, NULL, 'Thuc 4', 'Nguyen', 'd4z-d4z', 'd4zd4z@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84123456789', 'New York City, United States', 'male', '6666666666.jpg', '2020-10-25 14:25:10', '2021-04-21 08:59:14'),
-(5, 3, NULL, NULL, 'Thuc 5', 'Nguyen', 'call-back', 'callback@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84987654321', 'TayNinh City, VietNam', 'male', '6666666666.jpg', '2020-10-25 14:25:10', '2021-04-21 08:59:16'),
-(6, 3, NULL, NULL, 'Thuc 6', 'Nguyen', 'i-love-me', 'iloveme@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84666666666', 'HaNoi, VietNam', 'male', '6666666666.jpg', '2021-02-03 02:20:33', '2021-04-21 08:59:19'),
-(7, 3, NULL, NULL, 'Thuc 7', 'Nguyen', 'passport', 'passport@gmail.com', NULL, '$2y$10$56JsRNoiBuHj6l4jv1IY4OTz9LnOw7KjoyFnrAqfPyJdlGQiqTbzy', NULL, NULL, '03967857857', 'HaNoi City', 'male', '6666666666.jpg', '2021-04-22 15:33:41', '2021-04-22 15:33:41');
+INSERT INTO `users` (`id`, `role_id`, `facebook_id`, `google_id`, `first_name`, `last_name`, `user_name`, `email`, `email_verified_at`, `password`, `remember_token`, `auth_token`, `phone_number`, `address`, `gender`, `avatar`, `biography`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, 'Thuc', 'Nguyen', 'de4th-zone', 'nguyenthucofficial@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84336077131', 'HoChiMinh City, VietNam', 'male', '6666666666.jpg', NULL, '2020-10-25 14:25:10', '2021-04-21 08:58:02'),
+(2, 3, NULL, NULL, 'Thuc 2', 'Nguyen', 'nguyen-thuc', 'nguyenthuc@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84666999666', 'Mosul City, Iraq', 'female', '6666666666.jpg', NULL, '2020-10-25 14:25:10', '2021-04-21 08:59:09'),
+(3, 3, NULL, NULL, 'Thuc 3', 'Nguyen', 'thuc-jwt', 'thucjwt@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84999666999', 'Moskva, Russia', 'unknown', '6666666666.jpg', NULL, '2020-10-25 14:25:10', '2021-04-21 08:59:12'),
+(4, 3, NULL, NULL, 'Thuc 4', 'Nguyen', 'd4z-d4z', 'd4zd4z@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84123456789', 'New York City, United States', 'male', '6666666666.jpg', NULL, '2020-10-25 14:25:10', '2021-04-21 08:59:14'),
+(5, 3, NULL, NULL, 'Thuc 5', 'Nguyen', 'call-back', 'callback@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84987654321', 'TayNinh City, VietNam', 'male', '6666666666.jpg', NULL, '2020-10-25 14:25:10', '2021-04-21 08:59:16'),
+(6, 3, NULL, NULL, 'Thuc 6', 'Nguyen', 'i-love-me', 'iloveme@gmail.com', NULL, '$2y$10$6VYDB2m9ueOpbSIuMfnunuZ0l4JsvypCWnL1TFfN0jDh66kRjCAke', NULL, NULL, '84666666666', 'HaNoi, VietNam', 'male', '6666666666.jpg', NULL, '2021-02-03 02:20:33', '2021-04-21 08:59:19'),
+(7, 3, NULL, NULL, 'Thuc 7', 'Nguyen', 'passport', 'passport@gmail.com', NULL, '$2y$10$56JsRNoiBuHj6l4jv1IY4OTz9LnOw7KjoyFnrAqfPyJdlGQiqTbzy', NULL, NULL, '03967857857', 'HaNoi City', 'male', '6666666666.jpg', NULL, '2021-04-22 15:33:41', '2021-04-22 15:33:41');
 
 --
 -- Indexes for dumped tables
@@ -761,7 +761,6 @@ ALTER TABLE `post`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unq_post_slug` (`slug`),
   ADD KEY `idx_post_user_id` (`user_id`),
-  ADD KEY `idx_post_parent_id` (`parent_id`),
   ADD KEY `fk_post_category` (`category_id`);
 
 --
@@ -943,7 +942,6 @@ ALTER TABLE `follow_user`
 --
 ALTER TABLE `post`
   ADD CONSTRAINT `fk_post_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
-  ADD CONSTRAINT `fk_post_parent` FOREIGN KEY (`parent_id`) REFERENCES `post` (`id`),
   ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --

@@ -34,10 +34,8 @@ class AuthController extends ApiController
     public function register(RegisterRequest $request)
     {
         if($request->hasfile('avatar')) {
-
             $avatarName = time() . '.' . $request->file('avatar')->extension();
             Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($request->file('avatar')), 'public');
-
         } else {
             $avatarName = 'default_avatar.png';
         }
@@ -51,6 +49,7 @@ class AuthController extends ApiController
         $user->phone_number = $request->phone_number;
         $user->address = $request->address;
         $user->gender = $request->gender;
+        $user->biography = $request->biography;
         $user->avatar = $avatarName;
         $user->role_id = Role::where('slug', 'user')->first()->id;
         $user->save();

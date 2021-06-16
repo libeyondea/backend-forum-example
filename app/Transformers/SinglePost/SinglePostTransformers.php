@@ -15,7 +15,6 @@ class SinglePostTransformers extends TransformerAbstract
     {
         return [
             'id' => $post->id,
-            'parent_id' => $post->parent_id,
             'title' => $post->title,
             'slug' => $post->slug,
             'excerpt' => $post->excerpt,

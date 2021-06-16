@@ -21,6 +21,7 @@ class SettingController extends ApiController
         $user->email = $request['email'];
         $user->phone_number = $request['phone_number'];
         $user->address = $request['address'];
+        $user->biography = $request['biography'];
         $user->gender = $request['gender'];
 
         if($request->hasfile('avatar')) {

@@ -19,6 +19,7 @@ class SingleUserTransformers extends TransformerAbstract
             'last_name' => $user->last_name,
             'user_name' => $user->user_name,
             'avatar' => $user->avatar,
+            'biography' => $user->biography,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
             'total_posts' => $user->post->count(),
