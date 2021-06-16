@@ -9,15 +9,6 @@ class Comment extends Model
     protected $table = 'comment';
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'post_id',
-        'user_id',
-        'parent_id',
-        'content',
-        'published',
-        'published_at'
-    ];
-
     public function Post()
     {
     	return $this->belongsTo('App\Models\Post', 'post_id', 'id');
@@ -33,8 +24,8 @@ class Comment extends Model
     	return $this->hasMany('App\Models\Comment', 'parent_id', 'id');
     }
 
-    //public function AllChildrenComment()
-    //{
-    //    return $this->ChildrenComment()->with('ChildrenComment');
-    //}
+    public function ParentComment()
+    {
+    	return $this->belongsTo('App\Models\Comment', 'parent_id', 'id');
+    }
 }

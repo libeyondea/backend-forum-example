@@ -29,7 +29,7 @@ Route::group(['middleware' => 'cors'], function(){
     Route::get('users/{user_name}', [AuthController::class, 'singleUser']);
     //
     Route::get('posts', [PostController::class, 'listPost']);
-    Route::get('posts/{slug}', [PostController::class, 'singlePost']);
+    Route::get('posts/{user_name}/{slug}', [PostController::class, 'singlePost']);
     Route::get('posts_ghim', [PostController::class, 'listPostGhim']);
     //
     Route::get('tags', [TagController::class, 'listTag']);
@@ -39,7 +39,7 @@ Route::group(['middleware' => 'cors'], function(){
     Route::get('categories/{slug}', [CategoryController::class, 'singleCategory']);
     //
     Route::get('comments', [CommentController::class, 'listComment']);
-    Route::get('comments/{id}', [CommentController::class, 'singleComment']);
+    Route::get('comments/{slug}', [CommentController::class, 'singleComment']);
     //
     Route::post('current_user/deletion', [AuthController::class, 'facebookUserDeletion']);
     //
@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::post('posts', [PostController::class, 'createPost']);
     Route::post('posts/{slug}', [PostController::class, 'updatePost']);
     Route::delete('posts/{slug}', [PostController::class, 'deletePost']);
-    Route::get('posts/{slug}/edit', [PostController::class, 'editPost']);
+    Route::get('posts/{user_name}/{slug}/edit', [PostController::class, 'editPost']);
 
     Route::post('favorite_post', [PostController::class, 'favoritePost']);
     Route::delete('favorite_post', [PostController::class, 'unFavoritePost']);
@@ -79,7 +79,8 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::delete('follow_tag', [TagController::class, 'unFollowTag']);
     //
     Route::post('comments', [CommentController::class, 'createComment']);
-    Route::delete('comments/{id}', [CommentController::class, 'deleteComment']);
-    Route::put('comments/{id}', [CommentController::class, 'updateComment']);
-    Route::get('comments/{id}/edit', [CommentController::class, 'editComment']);
+    Route::delete('comments/{slug}', [CommentController::class, 'deleteComment']);
+    Route::put('comments/{slug}', [CommentController::class, 'updateComment']);
+    Route::get('comments/{slug}/edit', [CommentController::class, 'editComment']);
+    Route::get('comments/{slug}/delete', [CommentController::class, 'deleteCommentConfirm']);
 });

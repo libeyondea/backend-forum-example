@@ -31,6 +31,18 @@ class ApiController extends Controller
         ], $statusCode, $headers);
     }
 
+    protected function respondSuccessWithPaginationNested($data, $total,$totalParent, $statusCode = 200, $headers = [])
+    {
+        return $this->respond([
+            'success' => true,
+            'data' => $data,
+            'meta' => [
+                'total' => $total,
+                'total_parent' => $totalParent
+            ]
+        ], $statusCode, $headers);
+    }
+
     protected function respondError($message, $status, $code = '')
     {
         return $this->respond([

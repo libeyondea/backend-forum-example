@@ -58,6 +58,7 @@ CREATE TABLE `comment` (
   `post_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `slug` varchar(66) NOT NULL,
   `content` text NOT NULL,
   `published` tinyint(1) UNSIGNED NOT NULL,
   `published_at` datetime DEFAULT NULL,
@@ -69,8 +70,8 @@ CREATE TABLE `comment` (
 -- Dumping data for table `comment`
 --
 
-INSERT INTO `comment` (`id`, `post_id`, `user_id`, `parent_id`, `content`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, 'First comment', 1, '2021-04-21 20:05:09', '2021-04-21 13:06:14', '2021-04-21 13:06:14');
+INSERT INTO `comment` (`id`, `post_id`, `user_id`, `parent_id`, `slug`, `content`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, NULL, '1ega7', 'First comment', 1, '2021-04-21 20:05:09', '2021-04-21 13:06:14', '2021-04-21 13:06:14');
 
 -- --------------------------------------------------------
 
@@ -663,7 +664,8 @@ ALTER TABLE `comment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_comment_post_id` (`post_id`),
   ADD KEY `idx_comment_parent_id` (`parent_id`),
-  ADD KEY `fk_comment_user` (`user_id`);
+  ADD KEY `fk_comment_user` (`user_id`),
+  ADD UNIQUE KEY `unq_comment_slug` (`slug`);
 
 --
 -- Indexes for table `failed_jobs`

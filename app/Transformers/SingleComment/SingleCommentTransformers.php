@@ -1,34 +1,36 @@
 <?php
 
-namespace App\Transformers\ListComment;
+namespace App\Transformers\SingleComment;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Comment;
+use App\Transformers\ListComment\ListCommentTransformers;
 
-class ListCommentTransformers extends TransformerAbstract
+class SingleCommentTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
-        'user', 'post', 'children_comment'
+        'post', 'user', 'children_comment'
     ];
 
     public function transform(Comment $comment)
     {
         return [
             'id' => $comment->id,
-            'post_id' => $comment->post_id,
             'parent_id' => $comment->parent_id,
+            'title' => $comment->title,
             'slug' => $comment->slug,
             'content' => $comment->content,
             'published' => $comment->published,
             'published_at' => $comment->published_at,
             'created_at' => $comment->created_at,
-            'updated_at' => $comment->updated_at
+            'updated_at' => $comment->updated_at,
+            'parent_comment' => $comment->parentcomment
         ];
     }
 
     public function includeChildrenComment(Comment $comment)
     {
-        $childrenComment = $comment->childrenComment()->orderBy('created_at', 'desc')->get();
+        $childrenComment = $comment->childrencomment()->orderBy('created_at', 'desc')->get();
         return $this->collection($childrenComment,  new ListCommentTransformers);
     }
 
@@ -41,6 +43,6 @@ class ListCommentTransformers extends TransformerAbstract
     public function includeUser(Comment $comment)
     {
         $user = $comment->user;
-        return $this->item($user, new UserTransformers);
+        return $this->item($user,  new UserTransformers);
     }
 }

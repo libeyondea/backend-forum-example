@@ -116,9 +116,9 @@ class PostController extends ApiController
         return $this->respondSuccessWithPagination($listPost, $postsCount);
     }
 
-    public function singlePost($slug)
+    public function singlePost($user_name, $slug)
     {
-        $post = Post::where('slug', $slug);
+        $post = Post::where('slug', $slug)->where('user_id', User::where('user_name', $user_name)->firstOrFail()->id);
         $singlePost = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($singlePost);
     }
@@ -234,9 +234,10 @@ class PostController extends ApiController
         return $this->respondSuccess($singlePost);
     }
 
-    public function editPost($slug)
+    public function editPost($user_name, $slug)
     {
-        $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id);
+        $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id)
+                    ->where('user_id', User::where('user_name', $user_name)->first()->id);
         $editPost = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($editPost);
     }
