@@ -170,6 +170,7 @@ class AuthController extends ApiController
                 $user->user_name = 'gg_' . $profile['sub'];
                 $user->password = bcrypt(Str::random(9));
                 $user->avatar = $avatarName;
+                $user->gender = 'unknown';
                 $user->role_id = Role::where('slug', 'user')->first()->id;
 
                 if (!User::where('email', $profile['email'])->first()) {
