@@ -134,7 +134,7 @@ class AuthController extends ApiController
                 } else {
                     $user->email = '';
                 }
-
+                $user->save();
             }
 
             $tokenResult = $user->createToken('Personal Access Client');
@@ -156,7 +156,7 @@ class AuthController extends ApiController
 
     public function checkUserGoogle($profile)
     {
-        try{
+        try {
             $user = User::where('google_id', $profile['sub'])->first();
             if (!$user) {
 
@@ -180,7 +180,6 @@ class AuthController extends ApiController
                 } else {
                     $user->email = '';
                 }
-
                 $user->save();
             }
 
