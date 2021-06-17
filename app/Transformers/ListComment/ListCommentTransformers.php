@@ -22,7 +22,9 @@ class ListCommentTransformers extends TransformerAbstract
             'published' => $comment->published,
             'published_at' => $comment->published_at,
             'created_at' => $comment->created_at,
-            'updated_at' => $comment->updated_at
+            'updated_at' => $comment->updated_at,
+            'total_favorited' => $comment->favoritecomment->count(),
+            'favorited' => $comment->isFavorited()
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Comment;
+use App\Models\FavoriteComment;
 use App\Models\Post;
 use App\Models\User;
 use App\Transformers\ListComment\ListCommentTransformers;
@@ -98,5 +99,46 @@ class CommentController extends ApiController
                             });
         $deleteCommentConfirm = fractal($comment->firstOrFail(), new SingleCommentTransformers);
         return $this->respondSuccess($deleteCommentConfirm);
+    }
+
+    public function favoriteComment(Request $request)
+    {
+        $user = auth()->user();
+
+        $commentFavorite = Comment::where('slug', $request->slug)->firstOrFail();
+
+        $commentCheck = FavoriteComment::where('user_id', $user->id)->where('comment_id', $commentFavorite->id)->first();
+
+        if(!$commentCheck) {
+            $favorite = new FavoriteComment;
+            $favorite->user_id = $user->id;
+            $favorite->comment_id = $commentFavorite->id;
+            $favorite->save();
+            return $this->respondSuccess([
+                'id' => $favorite->comment->id,
+                'slug' => $favorite->comment->slug
+            ]);
+        } else {
+            return $this->respondUnprocessableEntity('Comment favorited');
+        }
+    }
+
+    public function unfavoriteComment(Request $request)
+    {
+        $user = auth()->user();
+
+        $commentFavorite = Comment::where('slug', $request->slug)->firstOrFail();
+
+        $favoriteCheck = FavoriteComment::where('user_id', $user->id)->where('comment_id', $commentFavorite->id)->first();
+
+        if(!!$favoriteCheck) {
+            $favoriteCheck->delete();
+            return $this->respondSuccess([
+                'id' => $favoriteCheck->comment->id,
+                'slug' => $favoriteCheck->comment->slug
+            ]);
+        } else {
+            return $this->respondUnprocessableEntity('Comment does not exist or not in the favoritelist');
+        }
     }
 }

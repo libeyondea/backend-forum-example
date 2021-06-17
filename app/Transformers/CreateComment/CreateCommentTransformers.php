@@ -23,6 +23,8 @@ class CreateCommentTransformers extends TransformerAbstract
             'published_at' => $comment->published_at,
             'created_at' => $comment->created_at,
             'updated_at' => $comment->updated_at,
+            'total_favorited' => 0,
+            'favorited' => false,
             'children_comment' => []
         ];
     }

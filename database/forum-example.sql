@@ -106,6 +106,20 @@ CREATE TABLE `favorite_post` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `favorite_post`
+--
+
+CREATE TABLE `favorite_comment` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `comment_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `follow_tag`
 --
 
@@ -680,8 +694,18 @@ ALTER TABLE `failed_jobs`
 ALTER TABLE `favorite_post`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unq_user_id_post_id` (`user_id`,`post_id`),
-  ADD KEY `idx_p_u_user_id` (`user_id`),
-  ADD KEY `idx_p_u_post_id` (`post_id`);
+  ADD KEY `idx_f_p_user_id` (`user_id`),
+  ADD KEY `idx_f_p_post_id` (`post_id`);
+
+--
+-- Indexes for table `favorite_comment`
+--
+ALTER TABLE `favorite_comment`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unq_user_id_comment_id` (`user_id`,`comment_id`),
+  ADD KEY `idx_f_c_user_id` (`user_id`),
+  ADD KEY `idx_f_c_comment_id` (`comment_id`);
+
 
 --
 -- Indexes for table `follow_tag`
@@ -833,6 +857,12 @@ ALTER TABLE `favorite_post`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `favorite_comment`
+--
+ALTER TABLE `favorite_comment`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `follow_tag`
 --
 ALTER TABLE `follow_tag`
@@ -920,8 +950,16 @@ ALTER TABLE `comment`
 -- Constraints for table `favorite_post`
 --
 ALTER TABLE `favorite_post`
-  ADD CONSTRAINT `fk_p_u_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_p_u_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_f_p_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_f_p_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `favorite_comment`
+--
+ALTER TABLE `favorite_comment`
+  ADD CONSTRAINT `fk_f_c_comment` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_f_c_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 --
 -- Constraints for table `follow_tag`

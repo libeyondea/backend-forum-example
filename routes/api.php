@@ -83,4 +83,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::put('comments/{slug}', [CommentController::class, 'updateComment']);
     Route::get('comments/{slug}/edit', [CommentController::class, 'editComment']);
     Route::get('comments/{slug}/delete', [CommentController::class, 'deleteCommentConfirm']);
+
+    Route::post('favorite_comment', [CommentController::class, 'favoriteComment']);
+    Route::delete('favorite_comment', [CommentController::class, 'unFavoriteComment']);
 });
