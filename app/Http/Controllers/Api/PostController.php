@@ -116,9 +116,9 @@ class PostController extends ApiController
         return $this->respondSuccessWithPagination($listPost, $postsCount);
     }
 
-    public function singlePost($user_name, $slug)
+    public function singlePost(Request $request, $slug)
     {
-        $post = Post::where('slug', $slug)->where('user_id', User::where('user_name', $user_name)->firstOrFail()->id);
+        $post = Post::where('slug', $slug)->where('user_id', User::where('user_name', $request->user_name)->firstOrFail()->id);
         $singlePost = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($singlePost);
     }
@@ -234,10 +234,10 @@ class PostController extends ApiController
         return $this->respondSuccess($singlePost);
     }
 
-    public function editPost($user_name, $slug)
+    public function editPost(Request $request, $slug)
     {
         $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id)
-                    ->where('user_id', User::where('user_name', $user_name)->first()->id);
+                    ->where('user_id', User::where('user_name', $request->user_name)->first()->id);
         $editPost = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($editPost);
     }
@@ -247,6 +247,15 @@ class PostController extends ApiController
         $deletePost = Post::where('slug', $slug)->where('user_id', auth()->user()->id)->firstOrFail();
         $deletePost->delete();
         return $this->respondSuccess($deletePost);
+    }
+
+    public function deletePostConfirm(Request $request, $slug)
+    {
+        $post = Post::where('slug', $slug)
+                    ->where('user_id', auth()->user()->id)
+                    ->where('user_id', User::where('user_name', $request->user_name)->firstOrFail()->id);
+        $deletePostConfirm = fractal($post->firstOrFail(), new SinglePostTransformers);
+        return $this->respondSuccess($deletePostConfirm);
     }
 
     public function favoritePost(Request $request)

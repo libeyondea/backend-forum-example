@@ -29,7 +29,7 @@ Route::group(['middleware' => 'cors'], function(){
     Route::get('users/{user_name}', [AuthController::class, 'singleUser']);
     //
     Route::get('posts', [PostController::class, 'listPost']);
-    Route::get('posts/{user_name}/{slug}', [PostController::class, 'singlePost']);
+    Route::get('posts/{slug}', [PostController::class, 'singlePost']);
     Route::get('posts_ghim', [PostController::class, 'listPostGhim']);
     //
     Route::get('tags', [TagController::class, 'listTag']);
@@ -67,8 +67,8 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::post('posts', [PostController::class, 'createPost']);
     Route::post('posts/{slug}', [PostController::class, 'updatePost']);
     Route::delete('posts/{slug}', [PostController::class, 'deletePost']);
-    Route::get('posts/{user_name}/{slug}/edit', [PostController::class, 'editPost']);
-
+    Route::get('posts/{slug}/edit', [PostController::class, 'editPost']);
+    Route::get('posts/{slug}/delete', [PostController::class, 'deletePostConfirm']);
     Route::post('favorite_post', [PostController::class, 'favoritePost']);
     Route::delete('favorite_post', [PostController::class, 'unFavoritePost']);
     //
@@ -83,7 +83,6 @@ Route::group(['middleware' => ['auth:api', 'cors']], function(){
     Route::put('comments/{slug}', [CommentController::class, 'updateComment']);
     Route::get('comments/{slug}/edit', [CommentController::class, 'editComment']);
     Route::get('comments/{slug}/delete', [CommentController::class, 'deleteCommentConfirm']);
-
     Route::post('favorite_comment', [CommentController::class, 'favoriteComment']);
     Route::delete('favorite_comment', [CommentController::class, 'unFavoriteComment']);
 });
