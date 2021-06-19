@@ -39,7 +39,6 @@ class AuthController extends ApiController
         } else {
             $avatarName = 'default_avatar.png';
         }
-
         $user = new User;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -54,7 +53,6 @@ class AuthController extends ApiController
         $user->role_id = Role::where('slug', 'user')->first()->id;
         $user->save();
         $user->sendEmailVerificationNotification();
-
         return $this->respondSuccess($user);
     }
 
