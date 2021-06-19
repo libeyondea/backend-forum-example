@@ -1,22 +1,15 @@
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-[![GitHub contributors](https://img.shields.io/github/contributors/Naereen/StrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example/graphs/contributors/)
-[![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example/issues/)
-[![GitHub version](https://badge.fury.io/gh/Naereen%2FStrapDown.js.svg)](https://github.com/de4th-zone/backend-forum-example)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-
-<!-- PROJECT LOGO -->
+<p align="center">
+	<img src="https://img.shields.io/github/issues/de4th-zone/backend-forum-example" alt="GitHub issues">
+	<img src="https://img.shields.io/github/issues-closed/de4th-zone/backend-forum-example?color=red" alt="GitHub closed issues">
+    <img src="https://img.shields.io/github/package-json/v/de4th-zone/backend-forum-example?color=orange" alt="GitHub package.json version">
+	<img alt="GitHub" src="https://img.shields.io/github/license/de4th-zone/backend-forum-example">
+	<br />
+	<img src="https://img.shields.io/github/stars/de4th-zone/backend-forum-example?style=social" alt="GitHub Repo stars">
+</p>
 <br />
 <p align="center">
   <a href="https://github.com/de4th-zone/backend-forum-example">
-    <img style="border-radius: 50%;" src="https://i.imgur.com/6jxXR32.jpg" alt="De4thZone" width="166" height="166">
+    <img src="https://i.imgur.com/6jxXR32.jpg" alt="De4thZone" width="166" height="166">
   </a>
   <h3 align="center">Backend Forum Examples</h3>
   <p align="center">
@@ -29,8 +22,6 @@
     <a href="https://github.com/de4th-zone/backend-forum-example/issues">Request Feature</a>
   </p>
 </p>
-
-<!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
 
@@ -46,11 +37,7 @@
 -   [Contact](#contact)
 -   [Acknowledgements](#acknowledgements)
 
-<!-- ABOUT THE PROJECT -->
-
 ## About The Project
-
-<!--[![Product Name Screen Shot][product-screenshot]](https://github.com/de4th-zone/backend-forum-example)-->
 
 **Libraries used in the project**
 
@@ -60,8 +47,6 @@
 -   [Fractal](https://github.com/thephpleague/fractal)
 -   [Laravel Fractal](https://github.com/spatie/laravel-fractal)
 -   ...
-
-<!-- GETTING STARTED -->
 
 ## Getting Started
 
@@ -109,21 +94,15 @@ or
 php artisan serve
 ```
 
-<!-- USAGE EXAMPLES -->
-
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+After successful installation, access the address http://localhost:666
 
 _For more examples, please refer to the [Documentation](https://github.com/de4th-zone/backend-forum-example)_
-
-<!-- ROADMAP -->
 
 ## Roadmap
 
 See the [open issues](https://github.com/de4th-zone/backend-forum-example/issues) for a list of proposed features (and known issues).
-
-<!-- CONTRIBUTING -->
 
 ## Contributing
 
@@ -135,13 +114,9 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<!-- LICENSE -->
-
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-<!-- CONTACT -->
 
 ## Contact
 
@@ -153,27 +128,6 @@ Email - nguyenthucofficial@gmail.com
 
 Other Project: [https://github.com/de4th-zone](https://github.com/de4th-zone)
 
-<!-- ACKNOWLEDGEMENTS -->
-
 ## Acknowledgements
 
 -   []()
--   []()
--   []()
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=flat-square
-[contributors-url]: https://github.com/github_username/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=flat-square
-[forks-url]: https://github.com/github_username/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=flat-square
-[stars-url]: https://github.com/github_username/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=flat-square
-[issues-url]: https://github.com/github_username/repo/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=flat-square
-[license-url]: https://github.com/github_username/repo/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/github_username
-[product-screenshot]: images/screenshot.png
