@@ -126,10 +126,8 @@ class PostController extends ApiController
     public function createPost(CreatePostRequest $request)
     {
         if($request->hasfile('image')) {
-
             $imageName = time() . '.' .$request->file('image')->extension();
             Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
-
         } else {
             $imageName = null;
         }
@@ -139,12 +137,22 @@ class PostController extends ApiController
         $createPost->user_id = auth()->user()->id;
         $createPost->title = $request->title;
         $createPost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
-        $createPost->excerpt = $request->excerpt;
         $createPost->content = $request->content;
         $createPost->image = $imageName;
         $createPost->ghim = '0';
         $createPost->published = '1';
         $createPost->published_at = Carbon::now()->toDateTimeString();
+        $createPost->excerpt = Str::limit(
+            preg_replace(
+                '/\s+/',
+                ' ',
+                trim(
+                    strip_tags(
+                        Str::markdown($request->content)
+                    )
+                )
+            ), 166, '...'
+        );
         $createPost->save();
         $lastIdPost = $createPost->id;
 
@@ -182,11 +190,20 @@ class PostController extends ApiController
         $updatePost->user_id = auth()->user()->id;
         $updatePost->title = $request->title;
         $updatePost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
-        $updatePost->excerpt = $request->excerpt;
         $updatePost->content = $request->content;
         $updatePost->published = '1';
         $updatePost->published_at = Carbon::now()->toDateTimeString();
-
+        $updatePost->excerpt = Str::limit(
+            preg_replace(
+                '/\s+/',
+                ' ',
+                trim(
+                    strip_tags(
+                        Str::markdown($request->content)
+                    )
+                )
+            ), 166, '...'
+        );
         if($request->hasfile('image')) {
             $oldImage = 'images/' . $updatePost->image;
             if (Storage::disk('s3')->exists($oldImage)) {
@@ -197,7 +214,6 @@ class PostController extends ApiController
 
             $updatePost->image = $imageName;
         }
-
         $updatePost->save();
 
         $lastIdPost = $updatePost->id;
