@@ -34,6 +34,7 @@ Route::group(['middleware' => 'cors'], function(){
     //
     Route::get('tags', [TagController::class, 'listTag']);
     Route::get('tags/{slug}', [TagController::class, 'singleTag']);
+    Route::get('tags_with_posts', [TagController::class, 'listTagWithPost']);
     //
     Route::get('categories', [CategoryController::class, 'listCategory']);
     Route::get('categories/{slug}', [CategoryController::class, 'singleCategory']);

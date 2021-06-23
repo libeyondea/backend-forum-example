@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\PostTag;
 use App\Models\FollowTag;
 use App\Transformers\ListTag\ListTagTransformers;
+use App\Transformers\ListTagWithPost\ListTagWithPostTransformers;
 use App\Transformers\SingleTag\SingleTagTransformers;
 
 class TagController extends ApiController
@@ -19,6 +20,15 @@ class TagController extends ApiController
         $tagsCount = $tag->get()->count();
         $listTag = fractal($tag->skip($offset)->take($limit)->get(), new ListTagTransformers);
         return $this->respondSuccessWithPagination($listTag, $tagsCount);
+    }
+
+    public function listTagWithPost(Request $request, $limit = 5, $offset = 0)
+    {
+        $limit = $request->get('limit', $limit);
+        $offset = $request->get('offset', $offset);
+        $tag = new Tag;
+        $listTag = fractal($tag->skip($offset)->take($limit)->get(), new ListTagWithPostTransformers);
+        return $this->respondSuccess($listTag);
     }
 
     public function listTagFollowed(Request $request, $limit = 20, $offset = 0)
