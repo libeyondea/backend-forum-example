@@ -204,6 +204,15 @@ class PostController extends ApiController
                 )
             ), 166, '...'
         );
+
+        if($request->is_remove_img) {
+            $removeImage = 'images/' . $updatePost->image;
+            if (Storage::disk('s3')->exists($removeImage)) {
+                Storage::disk('s3')->delete($removeImage);
+            }
+            $updatePost->image = null;
+        }
+
         if($request->hasfile('image')) {
             $oldImage = 'images/' . $updatePost->image;
             if (Storage::disk('s3')->exists($oldImage)) {
@@ -211,7 +220,6 @@ class PostController extends ApiController
             }
             $imageName = time() . '.' . $request->file('image')->extension();
             Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
-
             $updatePost->image = $imageName;
         }
         $updatePost->save();
