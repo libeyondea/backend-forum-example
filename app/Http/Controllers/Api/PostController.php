@@ -189,7 +189,7 @@ class PostController extends ApiController
         $updatePost->category_id = $request->category_id;
         $updatePost->user_id = auth()->user()->id;
         $updatePost->title = $request->title;
-        $updatePost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
+        //$updatePost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
         $updatePost->content = $request->content;
         $updatePost->published = '1';
         $updatePost->published_at = Carbon::now()->toDateTimeString();
@@ -205,7 +205,7 @@ class PostController extends ApiController
             ), 166, '...'
         );
 
-        if($request->is_remove_img) {
+        if($request->boolean('is_remove_img')) {
             $removeImage = 'images/' . $updatePost->image;
             if (Storage::disk('s3')->exists($removeImage)) {
                 Storage::disk('s3')->delete($removeImage);
