@@ -21,7 +21,8 @@ class UpdatePostRequest extends ApiRequest
             'category_id' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5000',
             'tags' => 'required|array|min:1|max:4',
-            'tags.*.slug' => 'required|string'
+            'tags.*.slug' => 'required|string',
+            'is_remove_img' => 'required|boolean'
         ];
     }
 
@@ -43,7 +44,8 @@ class UpdatePostRequest extends ApiRequest
             'tags.required' => 'Tag is required',
             'tags.array' => 'Tag must be an array',
             'tags.min' => 'Tag must have an item',
-            'tags.max' => 'Add up to 4 tags'
+            'tags.max' => 'Add up to 4 tags',
+            'is_remove_img.boolean' => 'isRemoveImage must be a boolean',
         ];
     }
 
@@ -56,7 +58,8 @@ class UpdatePostRequest extends ApiRequest
     {
         $this->merge([
             'tags' => json_decode($this->tags, true),
-            'slug' => Str::slug($this->title, '-') . '-' . Str::lower(Str::random(4))
+            'slug' => Str::slug($this->title, '-') . '-' . Str::lower(Str::random(4)),
+            'is_remove_img' => filter_var($this->is_remove_img, FILTER_VALIDATE_BOOLEAN)
         ]);
     }
     }
