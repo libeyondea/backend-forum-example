@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\SiteMapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,8 @@ Route::group(['middleware' => 'cors'], function(){
     //
     Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+    //
+    Route::get('sitemap', [SiteMapController::class, 'siteMap']);
 });
 
 Route::group(['middleware' => ['auth:api', 'cors']], function(){
