@@ -212,6 +212,8 @@ class AuthController extends ApiController
         return $this->respondSuccess([
             'id' => auth()->user()->id,
             'user_name' =>auth()->user()->user_name,
+            'first_name' => auth()->user()->first_name,
+            'last_name' => auth()->user()->last_name,
             'avatar' => auth()->user()->avatar
         ]);
     }
