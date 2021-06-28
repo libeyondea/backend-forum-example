@@ -83,7 +83,7 @@ class PostController extends ApiController
                 $q->where('user_name', $request->favorited);
             });
         } else {
-            $post = Post::where('ghim', 0);
+            $post = Post::where('pinned', 0);
             if ($tab == 'feed' && $user) {
                 $post = $post->where(function($subQuery) use ($user)
                 {
@@ -105,12 +105,12 @@ class PostController extends ApiController
         return $this->respondSuccessWithPagination($listPost, $postsCount);
     }
 
-    public function listPostGhim(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
+    public function listPostPinned(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
     {
         $limit = $request->get('limit', $limit);
         $offset = $request->get('offset', $offset);
 
-        $post = Post::where('ghim', 1);
+        $post = Post::where('pinned', 1);
         $postsCount = $post->get()->count();
         $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), new ListPostTransformers);
         return $this->respondSuccessWithPagination($listPost, $postsCount);
@@ -139,7 +139,7 @@ class PostController extends ApiController
         $createPost->slug = Str::slug($request->title, '-') . '-' . Str::lower(Str::random(4));
         $createPost->content = $request->content;
         $createPost->image = $imageName;
-        $createPost->ghim = '0';
+        $createPost->pinned = '0';
         $createPost->published = '1';
         $createPost->published_at = Carbon::now()->toDateTimeString();
         $createPost->excerpt = Str::limit(

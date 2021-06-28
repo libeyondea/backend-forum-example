@@ -18,7 +18,7 @@ class ListPostTransformers extends TransformerAbstract
             'title' => $post->title,
             'slug' => $post->slug,
             'excerpt' => $post->excerpt,
-            'ghim' => $post->ghim,
+            'pinned' => $post->pinned,
             'published' => $post->published,
             'published_at' => $post->published_at,
             'created_at' => $post->created_at,

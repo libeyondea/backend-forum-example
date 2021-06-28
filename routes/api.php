@@ -31,7 +31,7 @@ Route::group(['middleware' => 'cors'], function(){
     //
     Route::get('posts', [PostController::class, 'listPost']);
     Route::get('posts/{slug}', [PostController::class, 'singlePost']);
-    Route::get('posts_ghim', [PostController::class, 'listPostGhim']);
+    Route::get('posts_pinned', [PostController::class, 'listPostPinned']);
     //
     Route::get('tags', [TagController::class, 'listTag']);
     Route::get('tags/{slug}', [TagController::class, 'singleTag']);

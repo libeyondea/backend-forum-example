@@ -328,7 +328,7 @@ CREATE TABLE `post` (
   `excerpt` varchar(666) DEFAULT NULL,
   `image` varchar(666) DEFAULT NULL,
   `content` text NOT NULL,
-  `ghim` tinyint(1) UNSIGNED NOT NULL,
+  `pinned` tinyint(1) UNSIGNED NOT NULL,
   `published` tinyint(1) UNSIGNED NOT NULL,
   `published_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
@@ -339,7 +339,7 @@ CREATE TABLE `post` (
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `category_id`, `user_id`, `title`, `slug`, `excerpt`, `image`, `content`, `ghim`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
+INSERT INTO `post` (`id`, `category_id`, `user_id`, `title`, `slug`, `excerpt`, `image`, `content`, `pinned`, `published`, `published_at`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 'Forum example next and laravel rest api ', 'forum-example-next-and-laravel-rest-api', 'The sample app is a social blogging site, forum site, ... (i.e. a clone of dev.to or medium.com). We mainly use Next.js / SWR and some other support libraries.', '1621334140.png', '', 1, 1, '2021-05-25 03:14:14', '2021-05-25 03:14:14', '2021-05-25 03:14:14'),
 (2, 1, 1, 'Hello World 2', 'hello-world-2', 'Hello World 2 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 2 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-12-14 20:56:22', '2020-12-14 22:04:01'),
 (3, 1, 1, 'Hello World 3', 'hello-world-3', 'Hello World 3 is the best', null, '<p style=\"text-align: center;\"><span style=\"background-color: #c2e0f4; color: #236fa1;\"><strong>Hello World 3 is the best</strong></span></p>', 0, 1, '2020-10-31 03:14:14', '2020-10-30 20:56:23', '2020-12-14 18:59:43'),
