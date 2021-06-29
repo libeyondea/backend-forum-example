@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\SiteMapController;
+use App\Http\Controllers\Api\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,8 @@ Route::group(['middleware' => 'cors'], function(){
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
     //
     Route::get('sitemap', [SiteMapController::class, 'siteMap']);
+    //
+    Route::get('search', [SearchController::class, 'search']);
 });
 
 Route::group(['middleware' => ['auth:api', 'cors']], function(){
