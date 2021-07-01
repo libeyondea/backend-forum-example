@@ -21,87 +21,111 @@ use App\Http\Requests\Api\UpdatePostRequest;
 
 class PostController extends ApiController
 {
-    public function listPost(Request $request, $limit = 10, $offset = 0, $field = 'created_at', $type = 'desc', $tab = 'feed')
+    public function listPost(Request $request)
     {
         $user = auth('api')->user();
-        $limit = $request->get('limit', $limit);
-        $offset = $request->get('offset', $offset);
-        $tab = $request->get('tab', $tab);
+        $limit = $request->get('limit', 10);
+        $offset = $request->get('offset', 0);
+        $sortBy = $request->get('sort_by', 'feed');
+        $sortDirection = $request->get('sort_direction', 'desc');
 
-        if ($tab != 'latest' && $tab != 'oldest' && $tab != 'feed') {
+        if ($sortDirection == 'desc') {
+            $orderDirection = 'desc';
+        } else if ($sortDirection == 'asc') {
+            $orderDirection = 'asc';
+        } else {
             return $this->respondNotFound();
-        }
-
-        if ($tab == 'latest') {
-            $type = 'desc';
-        } else if ($tab == 'oldest') {
-            $type = 'asc';
         }
 
         if ($request->has('tag')) {
             $post = Post::whereHas('tag', function($q) use ($request) {
                 $q->where('slug', $request->tag);
-            });
-            if ($tab == 'feed' && $user) {
-                $post = $post->where(function($subQuery) use ($user)
-                {
-                    $subQuery->whereHas('tag', function($q) use ($user) {
-                        $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
-                    })->orWhereHas('user', function($q) use ($user) {
-                        $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
+            })->where('published', 1);
+            if ($sortBy == 'feed') {
+                if ($user) {
+                    $post = $post->where(function($subQuery) use ($user)
+                    {
+                        $subQuery->whereHas('tag', function($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        })->orWhereHas('user', function($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        });
                     });
-                });
+                } else {
+                    $post = $post->orderBy('published_at', $orderDirection);
+                }
+            } else if ($sortBy == 'published_at') {
+                $post = $post->orderBy('published_at', $orderDirection);
+            } else {
+                return $this->respondNotFound();
             }
         } else if ($request->has('category')) {
             $post = Post::whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);
-            });
-            if ($tab == 'feed' && $user) {
-                $post = $post->where(function($subQuery) use ($user)
-                {
-                    $subQuery->whereHas('user', function($q) use ($user) {
-                        $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
-                    })->orWhereHas('tag', function($q) use ($user) {
-                        $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
-                    });
-                });
+            })->where('published', 1);
+            if ($sortBy == 'feed') {
+                if ($user) {
+                    $post = $post->where(function($subQuery) use ($user)
+                    {
+                        $subQuery->whereHas('user', function($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        })->orWhereHas('tag', function($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        });
+                    })->orderBy('published_at', $orderDirection);
+                } else {
+                    $post = $post->orderBy('published_at', $orderDirection);
+                }
+            } else if ($sortBy == 'published_at') {
+                $post = $post->orderBy('published_at', $orderDirection);
+            } else {
+                return $this->respondNotFound();
             }
         } else if ($request->has('user')) {
             $post = Post::whereHas('user', function($q) use ($request) {
                 $q->where('user_name', $request->user);
             });
-        } else if ($request->has('favorited')) {
-            $post = Post::whereHas('userfavorite', function($q) use ($request) {
-                $q->where('user_name', $request->favorited);
-            });
+            if ($sortBy == 'published_at') {
+                $post = $post->orderBy('published_at', $orderDirection);
+            } else {
+                return $this->respondNotFound();
+            }
         } else {
-            $post = Post::where('pinned', 0);
-            if ($tab == 'feed' && $user) {
-                $post = $post->where(function($subQuery) use ($user)
-                {
-                    $subQuery->whereHas('user', function($q) use ($user) {
-                        $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
-                    })->orWhereHas('tag', function($q) use ($user) {
-                        $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
-                            $q->where('user_id',  $user->id);
-                        })->get());
-                    });
-                });
+            $post = Post::where('pinned', 0)->where('published', 1);
+            if ($sortBy == 'feed') {
+                if ($user) {
+                    $post = $post->where(function($subQuery) use ($user)
+                    {
+                        $subQuery->whereHas('user', function($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        })->orWhereHas('tag', function($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                                $q->where('user_id',  $user->id);
+                            })->get());
+                        });
+                    })->orderBy('published_at', $orderDirection);
+                } else {
+                    $post = $post->orderBy('published_at', $orderDirection);
+                }
+            } else if ($sortBy == 'published_at') {
+                $post = $post->orderBy('published_at', $orderDirection);
+            } else {
+                return $this->respondNotFound();
             }
         }
 
         $postsCount = $post->get()->count();
-        $listPost = fractal($post->orderBy($field, $type)->skip($offset)->take($limit)->get(), new ListPostTransformers);
+        $listPost = fractal($post->skip($offset)->take($limit)->get(), new ListPostTransformers);
         return $this->respondSuccessWithPagination($listPost, $postsCount);
     }
 

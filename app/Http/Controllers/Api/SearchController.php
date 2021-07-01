@@ -21,23 +21,25 @@ class SearchController extends ApiController
         $user = auth('api')->user();
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
-        $sort = $request->input('sort', 'latest');
+        $sortBy = $request->get('sort_by', 'published_at');
+        $sortDirection = $request->get('sort_direction', 'desc');
         $type = $request->input('type', 'post');
 
-        if ($sort == 'latest') {
-            $orderBy = 'desc';
-        } else if ($sort  == 'oldest') {
-            $orderBy = 'asc';
+        if ($sortDirection == 'desc') {
+            $orderDirection = 'desc';
+        } else if ($sortDirection  == 'asc') {
+            $orderDirection = 'asc';
         } else {
             return $this->respondNotFound();
         }
 
         if ($type == 'post') {
-            $model = Post::where('title', 'LIKE', '%' . $request->search_fields . '%');
+            $model = Post::where('title', 'LIKE', '%' . $request->search_fields . '%')->orderBy('published_at', $orderDirection);
             $transformers = new ListPostTransformers;
         } else if ($type == 'user') {
             $model = User::where('user_name', 'LIKE', '%' . $request->search_fields . '%')
-                        ->orWhere(DB::raw('CONCAT_WS(" ", first_name, last_name)'), 'LIKE', '%' . $request->search_fields . '%');
+                        ->orWhere(DB::raw('CONCAT_WS(" ", first_name, last_name)'), 'LIKE', '%' . $request->search_fields . '%')
+                        ->orderBy('created_at', $orderDirection);
             $transformers = new ListUserTransformers;
         } else if ($type == 'comment') {
             $model = Comment::where('content', 'LIKE', '%' . $request->search_fields . '%');
@@ -45,21 +47,23 @@ class SearchController extends ApiController
         } else if ($type == 'my_post') {
             if ($user) {
                 $model = Post::where('title', 'LIKE', '%' . $request->search_fields . '%')
-                            ->where('user_id',  $user->id);
+                            ->where('user_id',  $user->id)
+                            ->orderBy('created_at', $orderDirection);
                 $transformers = new ListPostTransformers;
             } else {
                 return $this->respondUnauthorized();
             }
         } else if ($type == 'tag') {
             $model = Tag::where('title', 'LIKE', '%' . $request->search_fields . '%')
-                        ->orWhere('slug', 'LIKE', '%' . $request->search_fields . '%');
+                        ->orWhere('slug', 'LIKE', '%' . $request->search_fields . '%')
+                        ->orderBy('created_at', $orderDirection);
             $transformers = new ListTagTransformers;
         } else {
             return $this->respondNotFound();
         }
 
         $totalCount = $model->get()->count();
-        $listModel = fractal($model->orderBy('created_at', $orderBy)->skip($offset)->take($limit)->get(), $transformers);
+        $listModel = fractal($model->skip($offset)->take($limit)->get(), $transformers);
         return $this->respondSuccessWithPagination($listModel, $totalCount);
     }
 }
