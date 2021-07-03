@@ -33,7 +33,7 @@ class CreatePostRequest extends ApiRequest
             'tags.required' => 'Tag is required',
             'tags.array' => 'Tag must be an array',
             'tags.min' => 'Tag must have an item',
-            'tags.max' => 'Add up to 4 tags'
+            'tags.max' => 'Add up to 6 tags'
         ];
     }
 
