@@ -15,8 +15,8 @@ class CreatePostRequest extends ApiRequest
             'content' => 'required',
             'category_id' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5000',
-            'tags' => 'required|array|min:1|max:4',
-            'tags.*.slug' => 'required|string'
+            'tags' => 'required|array|min:1|max:6',
+            'tags.*.slug' => 'required|string|max:33'
         ];
     }
 
