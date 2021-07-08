@@ -12,30 +12,34 @@ use App\Transformers\SingleTag\SingleTagTransformers;
 
 class TagController extends ApiController
 {
-    public function listTag(Request $request, $limit = 20, $offset = 0)
+    public function listTag(Request $request)
     {
-        $limit = $request->get('limit', $limit);
-        $offset = $request->get('offset', $offset);
-        $tag = new Tag;
+        $limit = $request->get('limit', 20);
+        $offset = $request->get('offset', 0);
+
+        $tag = Tag::withCount('post')->orderBy('post_count', 'desc')->orderBy('created_at', 'desc');
+
         $tagsCount = $tag->get()->count();
         $listTag = fractal($tag->skip($offset)->take($limit)->get(), new ListTagTransformers);
         return $this->respondSuccessWithPagination($listTag, $tagsCount);
     }
 
-    public function listTagWithPost(Request $request, $limit = 5, $offset = 0)
+    public function listTagWithPost(Request $request)
     {
-        $limit = $request->get('limit', $limit);
-        $offset = $request->get('offset', $offset);
-        $tag = new Tag;
+        $limit = $request->get('limit', 5);
+        $offset = $request->get('offset', 0);
+
+        $tag = Tag::withCount('post')->orderBy('post_count', 'desc')->orderBy('created_at', 'desc');
+
         $listTag = fractal($tag->skip($offset)->take($limit)->get(), new ListTagWithPostTransformers);
         return $this->respondSuccess($listTag);
     }
 
-    public function listTagFollowed(Request $request, $limit = 20, $offset = 0)
+    public function listTagFollowed(Request $request)
     {
         $user = auth()->user();
-        $limit = $request->get('limit', $limit);
-        $offset = $request->get('offset', $offset);
+        $limit = $request->get('limit', 20);
+        $offset = $request->get('offset', 0);
 
         $tag = Tag::whereHas('followtag', function($q) use ($user) {
             $q->where('user_id', $user->id);
