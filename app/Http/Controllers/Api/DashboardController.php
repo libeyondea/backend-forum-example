@@ -10,9 +10,9 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\PostTag;
 use App\Models\FollowTag;
-use App\Transformers\ListPost\ListPostTransformers;
-use App\Transformers\ListUser\ListUserTransformers;
-use App\Transformers\ListTag\ListTagTransformers;
+use App\Transformers\ListPost\PostTransformers as ListPostTransformers;
+use App\Transformers\ListUser\UserTransformers as ListUserTransformers;
+use App\Transformers\ListTag\TagTransformers as ListTagTransformers;
 
 class DashboardController extends ApiController
 {
