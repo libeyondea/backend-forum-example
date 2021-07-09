@@ -14,8 +14,8 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\FavoritePost;
 use Illuminate\Support\Facades\File;
-use App\Transformers\ListPost\ListPostTransformers;
-use App\Transformers\SinglePost\SinglePostTransformers;
+use App\Transformers\ListPost\PostTransformers as ListPostTransformers;
+use App\Transformers\SinglePost\PostTransformers as SinglePostTransformers;
 use App\Http\Requests\Api\CreatePostRequest;
 use App\Http\Requests\Api\UpdatePostRequest;
 
