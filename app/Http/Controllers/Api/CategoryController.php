@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Transformers\ListCategory\ListCategoryTransformers;
-use App\Transformers\SingleCategory\SingleCategoryTransformers;
+use App\Transformers\ListCategory\CategoryTransformers as ListCategoryTransformers;
+use App\Transformers\SingleCategory\CategoryTransformers as SingleCategoryTransformers;
 
 class CategoryController extends ApiController
 {
