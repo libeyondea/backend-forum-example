@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers\SingleTag;
+namespace App\Transformers\ListTag;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Tag;
 
-class SingleTagTransformers extends TransformerAbstract
+class TagTransformers extends TransformerAbstract
 {
     public function transform(Tag $tag)
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers\SingleCategory;
+namespace App\Transformers\ListCategory;
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Category;
 
-class SingleCategoryTransformers extends TransformerAbstract
+class CategoryTransformers extends TransformerAbstract
 {
     public function transform(Category $category)
     {
@@ -13,7 +13,6 @@ class SingleCategoryTransformers extends TransformerAbstract
             'id' => $category->id,
             'title' => $category->title,
             'slug' => $category->slug,
-            'content' => $category->content,
             'created_at' => $category->created_at,
             'updated_at' => $category->updated_at,
             'total_posts' =>$category->post->count()

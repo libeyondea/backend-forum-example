@@ -5,7 +5,7 @@ namespace App\Transformers\ListTagWithPost;
 use League\Fractal\TransformerAbstract;
 use App\Models\Tag;
 
-class ListTagWithPostTransformers extends TransformerAbstract
+class TagWithPostTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'posts'

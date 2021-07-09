@@ -5,7 +5,7 @@ namespace App\Transformers\SinglePost;
 use League\Fractal\TransformerAbstract;
 use App\Models\Post;
 
-class SinglePostTransformers extends TransformerAbstract
+class PostTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'user', 'category', 'tags'

@@ -5,7 +5,7 @@ namespace App\Transformers\ListUser;
 use League\Fractal\TransformerAbstract;
 use App\Models\User;
 
-class ListUserTransformers extends TransformerAbstract
+class UserTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'role',

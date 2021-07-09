@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\PostTag;
 use App\Models\FollowTag;
-use App\Transformers\ListTag\ListTagTransformers;
-use App\Transformers\ListTagWithPost\ListTagWithPostTransformers;
-use App\Transformers\SingleTag\SingleTagTransformers;
+use App\Transformers\ListTag\TagTransformers as ListTagTransformers;
+use App\Transformers\ListTagWithPost\TagWithPostTransformers as ListTagWithPostTransformers;
+use App\Transformers\SingleTag\TagTransformers as SingleTagTransformers;
 
 class TagController extends ApiController
 {

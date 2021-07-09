@@ -24,6 +24,7 @@ class SiteMapController extends ApiController
             $siteMap = new Tag;
             $transformers = new TagTransformers;
         }
+
         $listSiteMap = fractal($siteMap->orderBy('updated_at', 'desc')->skip(0)->take(66666)->get(), $transformers);
         return $this->respondSuccess($listSiteMap);
     }

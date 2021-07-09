@@ -5,7 +5,7 @@ namespace App\Transformers\SingleUser;
 use League\Fractal\TransformerAbstract;
 use App\Models\User;
 
-class SingleUserTransformers extends TransformerAbstract
+class UserTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'role',

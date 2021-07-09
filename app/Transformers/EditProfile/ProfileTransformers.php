@@ -5,7 +5,7 @@ namespace App\Transformers\EditProfile;
 use League\Fractal\TransformerAbstract;
 use App\Models\User;
 
-class EditProfileTransformers extends TransformerAbstract
+class ProfileTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'role',

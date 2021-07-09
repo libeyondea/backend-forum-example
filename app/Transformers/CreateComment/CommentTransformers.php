@@ -5,7 +5,7 @@ namespace App\Transformers\CreateComment;
 use League\Fractal\TransformerAbstract;
 use App\Models\Comment;
 
-class CreateCommentTransformers extends TransformerAbstract
+class CommentTransformers extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'post', 'user'
