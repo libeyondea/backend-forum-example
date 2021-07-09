@@ -19,7 +19,7 @@ use App\Models\Tag;
 use App\Models\Role;
 use App\Models\User;
 use App\Mail\VerifyMail;
-use App\Transformers\SingleUser\SingleUserTransformers;
+use App\Transformers\SingleUser\UserTransformers as SingleUserTransformers;
 use App\Http\Requests\Api\RegisterRequest;
 
 class AuthController extends ApiController
