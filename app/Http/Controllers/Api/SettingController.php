@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
-use App\Transformers\EditProfile\EditProfileTransformers;
+use App\Transformers\EditProfile\ProfileTransformers as EditProfileTransformers;
 use App\Http\Requests\Api\UpdateProfileRequest;
 
 class SettingController extends ApiController
