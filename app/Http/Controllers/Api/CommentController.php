@@ -8,9 +8,9 @@ use App\Models\Comment;
 use App\Models\FavoriteComment;
 use App\Models\Post;
 use App\Models\User;
-use App\Transformers\ListComment\ListCommentTransformers;
-use App\Transformers\SingleComment\SingleCommentTransformers;
-use App\Transformers\CreateComment\CreateCommentTransformers;
+use App\Transformers\ListComment\CommentTransformers as ListCommentTransformers;
+use App\Transformers\SingleComment\CommentTransformers as SingleCommentTransformers;
+use App\Transformers\CreateComment\CommentTransformers as CreateCommentTransformers;
 use App\Http\Requests\Api\CreateCommentRequest;
 use App\Http\Requests\Api\UpdateCommentRequest;
 
