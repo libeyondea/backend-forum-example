@@ -7,10 +7,10 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Tag;
-use App\Transformers\ListPost\ListPostTransformers;
-use App\Transformers\ListUser\ListUserTransformers;
-use App\Transformers\ListComment\ListCommentTransformers;
-use App\Transformers\ListTag\ListTagTransformers;
+use App\Transformers\ListPost\PostTransformers as ListPostTransformers;
+use App\Transformers\ListUser\UserTransformers as ListUserTransformers;
+use App\Transformers\ListComment\CommentTransformers as ListCommentTransformers;
+use App\Transformers\ListTag\TagTransformers as ListTagTransformers;
 use App\Http\Requests\Api\SearchRequest;
 use DB;
 
