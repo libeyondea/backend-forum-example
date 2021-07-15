@@ -9,8 +9,8 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VerificationController;
-use App\Http\Controllers\Api\SiteMapController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\SiteMapController;
 
 /*
 |--------------------------------------------------------------------------
