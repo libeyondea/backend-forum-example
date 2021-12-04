@@ -33,12 +33,21 @@ class AuthController extends ApiController
 
     public function register(RegisterRequest $request)
     {
-        if($request->hasfile('avatar')) {
+        /* if($request->hasfile('avatar')) {
             $avatarName = time() . '.' . $request->file('avatar')->extension();
             Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($request->file('avatar')), 'public');
         } else {
             $avatarName = 'default_avatar.png';
+        } */
+
+        // Public folder
+        if ($request->hasfile('avatar')) {
+            $avatarName = time() . '.' . $request->file('avatar')->extension();
+            Storage::put($avatarName, file_get_contents($request->file('avatar')));
+        } else {
+            $avatarName = 'default_avatar.png';
         }
+
         $user = new User;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -66,7 +75,7 @@ class AuthController extends ApiController
 
         $credentials = request(['user_name', 'password']);
 
-        if(!auth()->attempt($credentials)) {
+        if (!auth()->attempt($credentials)) {
             return $this->respondUnprocessableEntity('Incorrect username or password');
         }
 
@@ -74,7 +83,7 @@ class AuthController extends ApiController
 
         return $this->respondSuccess([
             'id' => auth()->user()->id,
-            'user_name' =>auth()->user()->user_name,
+            'user_name' => auth()->user()->user_name,
             'avatar' => auth()->user()->avatar,
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
@@ -211,7 +220,7 @@ class AuthController extends ApiController
     {
         return $this->respondSuccess([
             'id' => auth()->user()->id,
-            'user_name' =>auth()->user()->user_name,
+            'user_name' => auth()->user()->user_name,
             'first_name' => auth()->user()->first_name,
             'last_name' => auth()->user()->last_name,
             'avatar' => auth()->user()->avatar
@@ -231,7 +240,7 @@ class AuthController extends ApiController
         $userFollowing = User::where('user_name', $request->user_name)->firstOrFail();
         $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
 
-        if(!$followCheck) {
+        if (!$followCheck) {
             $follow = new FollowUser;
             $follow->user_id = $user->id;
             $follow->following_id = $userFollowing->id;
@@ -251,7 +260,7 @@ class AuthController extends ApiController
         $userFollowing = User::where('user_name', $request->user_name)->firstOrFail();
         $followCheck = FollowUser::where('user_id', $user->id)->where('following_id', $userFollowing->id)->first();
 
-        if(!!$followCheck) {
+        if (!!$followCheck) {
             $followCheck->delete();
             return $this->respondSuccess([
                 'id' => $followCheck->following->id,
@@ -300,7 +309,8 @@ class AuthController extends ApiController
         return $data;
     }
 
-    function base64_url_decode($input) {
+    function base64_url_decode($input)
+    {
         return base64_decode(strtr($input, '-_', '+/'));
     }
 }

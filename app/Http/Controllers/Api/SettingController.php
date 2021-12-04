@@ -24,13 +24,13 @@ class SettingController extends ApiController
         $user->biography = $request['biography'];
         $user->gender = $request['gender'];
 
-        if($request->hasfile('avatar')) {
-            $oldAvatar = 'images/' . $user->avatar;
-            if (Storage::disk('s3')->exists($oldAvatar)) {
-                Storage::disk('s3')->delete($oldAvatar);
+        if ($request->hasfile('avatar')) {
+            $oldAvatar = $user->avatar;
+            if (Storage::disk('images')->exists($oldAvatar)) {
+                Storage::disk('images')->delete($oldAvatar);
             }
             $avatarName = time() . '.' . $request->file('avatar')->extension();
-            Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($request->file('avatar')), 'public');
+            Storage::disk('images')->put($avatarName, file_get_contents($request->file('avatar')));
 
             $user->avatar = $avatarName;
         }

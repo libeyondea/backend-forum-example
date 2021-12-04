@@ -38,19 +38,18 @@ class PostController extends ApiController
         }
 
         if ($request->has('tag')) {
-            $post = Post::whereHas('tag', function($q) use ($request) {
+            $post = Post::whereHas('tag', function ($q) use ($request) {
                 $q->where('slug', $request->tag);
             })->where('published', 1);
             if ($sortBy == 'feed') {
                 if ($user) {
-                    $post = $post->where(function($subQuery) use ($user)
-                    {
-                        $subQuery->whereHas('tag', function($q) use ($user) {
-                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                    $post = $post->where(function ($subQuery) use ($user) {
+                        $subQuery->whereHas('tag', function ($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
-                        })->orWhereHas('user', function($q) use ($user) {
-                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                        })->orWhereHas('user', function ($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
                         });
@@ -64,19 +63,18 @@ class PostController extends ApiController
                 return $this->respondNotFound();
             }
         } else if ($request->has('category')) {
-            $post = Post::whereHas('category', function($q) use ($request) {
+            $post = Post::whereHas('category', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             })->where('published', 1);
             if ($sortBy == 'feed') {
                 if ($user) {
-                    $post = $post->where(function($subQuery) use ($user)
-                    {
-                        $subQuery->whereHas('user', function($q) use ($user) {
-                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                    $post = $post->where(function ($subQuery) use ($user) {
+                        $subQuery->whereHas('user', function ($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
-                        })->orWhereHas('tag', function($q) use ($user) {
-                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                        })->orWhereHas('tag', function ($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
                         });
@@ -90,7 +88,7 @@ class PostController extends ApiController
                 return $this->respondNotFound();
             }
         } else if ($request->has('user')) {
-            $post = Post::whereHas('user', function($q) use ($request) {
+            $post = Post::whereHas('user', function ($q) use ($request) {
                 $q->where('user_name', $request->user);
             });
             if ($sortBy == 'published_at') {
@@ -102,14 +100,13 @@ class PostController extends ApiController
             $post = Post::where('pinned', 0)->where('published', 1);
             if ($sortBy == 'feed') {
                 if ($user) {
-                    $post = $post->where(function($subQuery) use ($user)
-                    {
-                        $subQuery->whereHas('user', function($q) use ($user) {
-                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function($q) use ($user) {
+                    $post = $post->where(function ($subQuery) use ($user) {
+                        $subQuery->whereHas('user', function ($q) use ($user) {
+                            $q->whereIn('user_name',  User::select('user_name')->whereHas('following', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
-                        })->orWhereHas('tag', function($q) use ($user) {
-                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function($q) use ($user) {
+                        })->orWhereHas('tag', function ($q) use ($user) {
+                            $q->whereIn('slug',  Tag::select('slug')->whereHas('followtag', function ($q) use ($user) {
                                 $q->where('user_id',  $user->id);
                             })->get());
                         });
@@ -149,9 +146,17 @@ class PostController extends ApiController
 
     public function createPost(CreatePostRequest $request)
     {
-        if($request->hasfile('image')) {
-            $imageName = time() . '.' .$request->file('image')->extension();
+        /* if ($request->hasfile('image')) {
+            $imageName = time() . '.' . $request->file('image')->extension();
             Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
+        } else {
+            $imageName = null;
+        } */
+
+        // Public folder
+        if ($request->hasfile('image')) {
+            $imageName = time() . '.' . $request->file('image')->extension();
+            Storage::disk('images')->put($imageName, file_get_contents($request->file('image')));
         } else {
             $imageName = null;
         }
@@ -175,7 +180,9 @@ class PostController extends ApiController
                         Str::markdown($request->content)
                     )
                 )
-            ), 166, '...'
+            ),
+            166,
+            '...'
         );
         $createPost->save();
         $lastIdPost = $createPost->id;
@@ -226,26 +233,29 @@ class PostController extends ApiController
                         Str::markdown($request->content)
                     )
                 )
-            ), 166, '...'
+            ),
+            166,
+            '...'
         );
 
-        if($request->boolean('is_remove_img')) {
-            $removeImage = 'images/' . $updatePost->image;
-            if (Storage::disk('s3')->exists($removeImage)) {
-                Storage::disk('s3')->delete($removeImage);
+        if ($request->boolean('is_remove_img')) {
+            $removeImage = $updatePost->image;
+            if (Storage::disk('images')->exists($removeImage)) {
+                Storage::disk('images')->delete($removeImage);
             }
             $updatePost->image = null;
         }
 
-        if($request->hasfile('image')) {
-            $oldImage = 'images/' . $updatePost->image;
-            if (Storage::disk('s3')->exists($oldImage)) {
-                Storage::disk('s3')->delete($oldImage);
+        if ($request->hasfile('image')) {
+            $oldImage = $updatePost->image;
+            if (Storage::disk('images')->exists($oldImage)) {
+                Storage::disk('images')->delete($oldImage);
             }
             $imageName = time() . '.' . $request->file('image')->extension();
-            Storage::disk('s3')->put('images/' . $imageName, file_get_contents($request->file('image')), 'public');
+            Storage::disk('images')->put($imageName, file_get_contents($request->file('image')));
             $updatePost->image = $imageName;
         }
+
         $updatePost->save();
 
         $lastIdPost = $updatePost->id;
@@ -285,7 +295,7 @@ class PostController extends ApiController
     public function editPost(Request $request, $slug)
     {
         $post = Post::where('slug', $slug)->where('user_id', auth()->user()->id)
-                    ->where('user_id', User::where('user_name', $request->user_name)->first()->id);
+            ->where('user_id', User::where('user_name', $request->user_name)->first()->id);
         $editPost = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($editPost);
     }
@@ -300,8 +310,8 @@ class PostController extends ApiController
     public function deletePostConfirm(Request $request, $slug)
     {
         $post = Post::where('slug', $slug)
-                    ->where('user_id', auth()->user()->id)
-                    ->where('user_id', User::where('user_name', $request->user_name)->firstOrFail()->id);
+            ->where('user_id', auth()->user()->id)
+            ->where('user_id', User::where('user_name', $request->user_name)->firstOrFail()->id);
         $deletePostConfirm = fractal($post->firstOrFail(), new SinglePostTransformers);
         return $this->respondSuccess($deletePostConfirm);
     }
@@ -314,7 +324,7 @@ class PostController extends ApiController
 
         $favoriteCheck = FavoritePost::where('user_id', $user->id)->where('post_id', $postFavorite->id)->first();
 
-        if(!$favoriteCheck) {
+        if (!$favoriteCheck) {
             $favorite = new FavoritePost;
             $favorite->user_id = $user->id;
             $favorite->post_id = $postFavorite->id;
@@ -336,7 +346,7 @@ class PostController extends ApiController
 
         $favoriteCheck = FavoritePost::where('user_id', $user->id)->where('post_id', $postFavorite->id)->first();
 
-        if(!!$favoriteCheck) {
+        if (!!$favoriteCheck) {
             $favoriteCheck->delete();
             return $this->respondSuccess([
                 'id' => $favoriteCheck->post->id,
