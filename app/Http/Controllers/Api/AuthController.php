@@ -43,7 +43,7 @@ class AuthController extends ApiController
         // Public folder
         if ($request->hasfile('avatar')) {
             $avatarName = time() . '.' . $request->file('avatar')->extension();
-            Storage::put($avatarName, file_get_contents($request->file('avatar')));
+            Storage::disk('images')->put($avatarName, file_get_contents($request->file('avatar')));
         } else {
             $avatarName = 'default_avatar.png';
         }
@@ -123,7 +123,7 @@ class AuthController extends ApiController
 
                 $avatarContent = $profile['picture']['data']['url'];
                 $avatarName = time() . '.jpg';
-                Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
+                Storage::disk('images')->put($avatarName, file_get_contents($avatarContent));
 
                 $user = new User;
                 $user->facebook_id = $profile['id'];
@@ -169,7 +169,7 @@ class AuthController extends ApiController
 
                 $avatarContent = $profile['picture'];
                 $avatarName = time() . '.jpg';
-                Storage::disk('s3')->put('images/' . $avatarName, file_get_contents($avatarContent), 'public');
+                Storage::disk('images')->put($avatarName, file_get_contents($avatarContent));
 
                 $user = new User;
                 $user->google_id = $profile['sub'];
