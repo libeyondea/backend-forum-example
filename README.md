@@ -93,10 +93,6 @@ composer install
 
 4. Run project
 
-Run backend-forum-example.bat file
-
-or
-
 ```sh
 php artisan serve
 ```
@@ -107,7 +103,7 @@ php artisan serve
 
 ## Usage
 
-After successful installation, access the address http://localhost:666
+After successful installation, access the address http://localhost:8000
 
 _For more examples, please refer to the [Documentation](https://github.com/libeyondea/backend-forum-example)_
 
