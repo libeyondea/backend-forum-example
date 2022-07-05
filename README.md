@@ -127,11 +127,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Twitter - [@de4th_zone](https://twitter.com/de4th_zone)
+Twitter - [@libeyondea](https://twitter.com/libeyondea)
 
-Facebook - [Nguyễn Thức](https://www.facebook.com/d4z.d4z.d4z.d4z)
-
-Email - nguyenthucofficial@gmail.com
+Email - libeyondea@gmail.com
 
 Other Project: [https://github.com/libeyondea](https://github.com/libeyondea)
 
